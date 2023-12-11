@@ -1,6 +1,6 @@
 import sqlite3
-import os
 from api.model.user import User
+import hashlib
 
 class UserRepo:
 
@@ -21,11 +21,23 @@ class UserRepo:
             user.username,
             user.first_name,
             user.last_name,
-            user.password,
+            hashlib.sha512(user.password.encode('UTF-8')),
             user.role
             ))
         conn.commit()
         conn.close()
+
+
+    def view(username: str) -> User:
+        conn = sqlite3.connect('database/rest_pas_trop.db')
+        cur = conn.cursor()
+        query = "SELECT * from user WHERE username=?"
+        cur.execute(query, (username,))
+        row = cur.fetchone()
+
+        user = User(row[0], row[1], row[2], row[3], row[4])
+      
+        return user
 
 
     def view_all() -> list[User]:
@@ -48,7 +60,7 @@ class UserRepo:
         cur.execute(query, (
             user.first_name,
             user.last_name,
-            user.password,
+            hashlib.sha512(user.password.encode('UTF-8')),
             user.role,
         ))  
         conn.commit()

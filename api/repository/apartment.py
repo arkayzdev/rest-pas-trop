@@ -1,5 +1,4 @@
 import sqlite3
-import os
 from api.model.apartment import Apartment
 
 class ApartmentRepo:
@@ -26,6 +25,16 @@ class ApartmentRepo:
             ))
         conn.commit()
         conn.close()
+
+
+    def view(id_apartment: int) -> Apartment:
+        conn = sqlite3.connect('database/rest_pas_trop.db')
+        cur = conn.cursor()
+        query = "SELECT * from apartment WHERE id_apartment=?"
+        cur.execute(query, (id_apartment,))
+        row = cur.fetchone()
+        apartment =  Apartment(row[0], row[1], row[2], row[3], True if row[4] == 1 else False, row[5])
+        return apartment
 
 
     def view_all() -> list[Apartment]:
@@ -72,6 +81,4 @@ class ApartmentRepo:
         cur.execute(query)
         conn.commit()
         conn.close()
-        
-
 

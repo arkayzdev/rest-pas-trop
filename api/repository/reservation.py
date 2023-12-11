@@ -5,6 +5,7 @@ from api.model.reservation import Reservation
 class ReservationRepo:
 
     def create() -> None:
+        
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
         query = "CREATE TABLE IF NOT EXISTS reservation (id_reservation INTEGER PRIMARY KEY AUTOINCREMENT, start_date TIMESTAMP, end_date TIMESTAMP, price INTEGER, username TEXT)"
@@ -27,13 +28,22 @@ class ReservationRepo:
         conn.close()
 
 
+    def view(id_reservation: int) -> Reservation:
+        conn = sqlite3.connect('database/rest_pas_trop.db')
+        cur = conn.cursor()
+        query = "SELECT * from reservation WHERE id_reservation=?"
+        cur.execute(query, (id_reservation,))
+        row = cur.fetchone()
+        reservation = Reservation(row[0], row[1], row[2], row[3], row[4])
+        return reservation
+    
+
     def view_all() -> list[Reservation]:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
         query = "SELECT * from reservation"
         cur.execute(query)
         rows = cur.fetchall()
-
         reservations = [
             Reservation(row[0], row[1], row[2], row[3], row[4]) for row in rows
         ]
