@@ -22,7 +22,7 @@ class ReservationRepo:
             reservation.end_date,
             reservation.price,
             reservation.username
-            ))
+        ))
         conn.commit()
         conn.close()
 
@@ -44,17 +44,18 @@ class ReservationRepo:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
         query = "UPDATE reservation SET start_date=?, end_date=?, price=?, username=?, WHERE id_reservation=?"
-        cur.execute(query,
+        cur.execute(query, (
             reservation.start_date,
             reservation.end_date,
             reservation.price,
             reservation.username,
-            reservation.id_reservation)
+            reservation.id_reservation
+        ))
         conn.commit()
         conn.close()
 
 
-    def delete(id: int) -> None:
+    def delete(id_reservation: int) -> None:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
         query = "DELETE FROM reservation WHERE id_reservation=?"
@@ -71,11 +72,6 @@ class ReservationRepo:
         conn.commit()
         conn.close()
         
-# apart = reservation(None, 30,30,"28 a", True)
-
-# repo = reservationRepo('database/rest_pas_trop.db')
-# repo.insert(apart)
-# print(repo.view_all())
 
 
 # if not os.path.isfile('books.db'):

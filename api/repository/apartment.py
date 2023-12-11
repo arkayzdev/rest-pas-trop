@@ -56,7 +56,7 @@ class ApartmentRepo:
         conn.close()
 
 
-    def delete(id: int) -> None:
+    def delete(id_apartment: int) -> None:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
         query = "DELETE FROM apartment WHERE id_apartment=?"
@@ -73,15 +73,5 @@ class ApartmentRepo:
         conn.commit()
         conn.close()
         
-# apart = Apartment(None, 30,30,"28 a", True)
-
-# repo = ApartmentRepo('database/rest_pas_trop.db')
-# repo.insert(apart)
-# print(repo.view_all())
-
-
-# if not os.path.isfile('books.db'):
-#     repo.create()
-# repo.create()
 
 
