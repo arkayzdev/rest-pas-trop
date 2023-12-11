@@ -76,7 +76,7 @@ class UserRepo:
         conn.close()
 
 
-    def deleteAll() -> None:
+    def delete_all() -> None:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
         query = "DELETE FROM user"
