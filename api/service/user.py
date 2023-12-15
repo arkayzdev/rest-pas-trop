@@ -1,0 +1,24 @@
+from api.repository.user import UserRepo
+from api.model.user import User
+
+class UserService:
+    def __init__(self) -> None:
+        self.user_repo = UserRepo
+
+    def create(self, user: User) -> None:
+        self.user_repo.insert(user)    
+
+    def get(self, username: str) -> User:
+        return self.user_repo.view(username)
+    
+    def get_all(self) -> list[User]:
+        return self.user_repo.view_all()
+
+    def update(self, user: User):
+        self.user_repo.update(user)
+
+    def delete(self, user: User) -> None:
+        self.user_repo.delete(user)
+
+    def delete_all(self) -> None:
+        self.user_repo.delete_all()
