@@ -20,7 +20,6 @@ def get_user(username: str):
     pass
 
 
-
 @user_blueprint.route('/<str:username>', methods=['PATCH'])
 def update_user(username: str):
     pass
@@ -34,3 +33,4 @@ def delete_user(username: str):
 @user_blueprint.route('/', methods=['DELETE'])
 def delete_users():
     pass
+
