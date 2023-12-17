@@ -15,13 +15,12 @@ class UserRepo:
     def insert(user: User) -> None:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
-        query = "INSERT INTO user (username, first_name, last_name, password, role) VALUES (?,?,?,?,?)"
+        query = "INSERT INTO user (username, first_name, last_name, password) VALUES (?,?,?,?)"
         cur.execute(query, (
             user.username,
             user.first_name,
             user.last_name,
-            hashlib.sha512(user.password.encode('UTF-8')),
-            user.role
+            hashlib.sha512(user.password.encode('UTF-8'))
             ))
         conn.commit()
         conn.close()
@@ -107,6 +106,7 @@ class UserRepo:
         conn.close()
         row = cur.fetchone()
         return row[0]
+    
     
     def get_role(username: str) -> str:
         conn = sqlite3.connect('database/rest_pas_trop.db')

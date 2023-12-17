@@ -11,6 +11,7 @@ class Reservation:
         self.price = price
         self.username = username
     
+    
     def serialize(self):
         return {
             'id_reservation': self.id_reservation,
@@ -20,6 +21,7 @@ class Reservation:
             'username': self.username
         }
     
+
     def json_fmt(self):
         return {
             'reservation': {

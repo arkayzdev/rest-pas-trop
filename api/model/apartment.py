@@ -12,6 +12,7 @@ class Apartment:
         self.availability = availability
         self.username = username
 
+
     def serialize(self):
         return {
             'id_apartment': self.id_apartment,
@@ -21,6 +22,7 @@ class Apartment:
             'availability': self.availability
         }
     
+
     def json_fmt(self):
         return {
         'apartment': {

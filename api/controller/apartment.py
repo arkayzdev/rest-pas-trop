@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from api.service.apartment import ApartmentService
 
 apartment_blueprint = Blueprint('apartment', __name__)

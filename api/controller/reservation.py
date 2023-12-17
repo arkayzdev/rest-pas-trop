@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from api.service.reservation import ReservationService
 
 reservation_blueprint = Blueprint('reservation', __name__)
