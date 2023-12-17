@@ -22,3 +22,9 @@ class UserService:
 
     def delete_all(self) -> None:
         self.user_repo.delete_all()
+
+    def check_user(self, username: str) -> int:
+        if self.user_repo.get_id(username):
+            return 1
+        return 0
+    

@@ -6,7 +6,7 @@ class UserRepo:
     def create() -> None:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
-        query = "CREATE TABLE IF NOT EXISTS user (id INTEGER AUTOINCREMENT PRIMARY KEY, username TEXT, first_name TEXT, last_name TEXT, password TEXT, role TEXT)"
+        query = "CREATE TABLE IF NOT EXISTS user (id INTEGER AUTOINCREMENT PRIMARY KEY, username TEXT, first_name TEXT, last_name TEXT, password TEXT, role TEXT DEFAULT 'Client')"
         cur.execute(query)
         conn.commit()
         conn.close()
@@ -97,10 +97,21 @@ class UserRepo:
             return row[0]
         return None
     
+
     def get_password(username: str) -> str:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
         query = "SELECT password WHERE username=?"
+        cur.execute(query, (username, ))
+        conn.commit()
+        conn.close()
+        row = cur.fetchone()
+        return row[0]
+    
+    def get_role(username: str) -> str:
+        conn = sqlite3.connect('database/rest_pas_trop.db')
+        cur = conn.cursor()
+        query = "SELECT role WHERE username=?"
         cur.execute(query, (username, ))
         conn.commit()
         conn.close()
