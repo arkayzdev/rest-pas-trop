@@ -3,11 +3,10 @@ from api.model.user import User
 import hashlib
 
 class UserRepo:
-
     def create() -> None:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
-        query = "CREATE TABLE IF NOT EXISTS user (username TEXT PRIMARY KEY, first_name TEXT, last_name TEXT, password TEXT, role TEXT)"
+        query = "CREATE TABLE IF NOT EXISTS user (id INTEGER AUTOINCREMENT PRIMARY KEY, username TEXT, first_name TEXT, last_name TEXT, password TEXT, role TEXT)"
         cur.execute(query)
         conn.commit()
         conn.close()
@@ -35,7 +34,7 @@ class UserRepo:
         cur.execute(query, (username,))
         row = cur.fetchone()
 
-        user = User(row[0], row[1], row[2], row[3], row[4])
+        user = User(row[0], row[1], row[2], row[3], row[4], row[5])
       
         return user
 
@@ -48,7 +47,7 @@ class UserRepo:
         rows = cur.fetchall()
 
         users = [
-            User(row[0], row[1], row[2], row[3], row[4]) for row in rows
+            User(row[0], row[1], row[2], row[3], row[4], row[5]) for row in rows
         ]
         return users
     
@@ -56,8 +55,9 @@ class UserRepo:
     def update(user: User) -> None: 
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
-        query = "UPDATE user SET first_name=?, last_name=?, password=?, role=? WHERE username=?"
+        query = "UPDATE user SET username=? first_name=?, last_name=?, password=?, role=? WHERE username=?"
         cur.execute(query, (
+            user.username,
             user.first_name,
             user.last_name,
             hashlib.sha512(user.password.encode('UTF-8')),
@@ -83,6 +83,29 @@ class UserRepo:
         cur.execute(query)
         conn.commit()
         conn.close()
+
+
+    def get_id(username: str) -> str:
+        conn = sqlite3.connect('database/rest_pas_trop.db')
+        cur = conn.cursor()
+        query = "SELECT id WHERE username=?"
+        cur.execute(query, (username, ))
+        conn.commit()
+        conn.close()
+        row = cur.fetchone()
+        if row:
+            return row[0]
+        return None
+    
+    def get_password(username: str) -> str:
+        conn = sqlite3.connect('database/rest_pas_trop.db')
+        cur = conn.cursor()
+        query = "SELECT password WHERE username=?"
+        cur.execute(query, (username, ))
+        conn.commit()
+        conn.close()
+        row = cur.fetchone()
+        return row[0]
         
 
 
