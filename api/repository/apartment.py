@@ -3,7 +3,7 @@ from api.model.apartment import Apartment
 
 class ApartmentRepo:
 
-    def create() -> None:
+    def create(self) -> None:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
         query = "CREATE TABLE IF NOT EXISTS apartment (id_apartment INTEGER PRIMARY KEY AUTOINCREMENT, area INTEGER, max_people INTEGER, address TEXT, availability BOOLEAN, username TEXT)"
@@ -12,7 +12,7 @@ class ApartmentRepo:
         conn.close()
 
 
-    def insert(apartment: Apartment) -> None:
+    def insert(self, apartment: Apartment) -> None:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
         query = "INSERT INTO apartment (area, max_people, address, availability, username) VALUES (?,?,?,?,?)"
@@ -27,7 +27,7 @@ class ApartmentRepo:
         conn.close()
 
 
-    def view(id_apartment: int) -> Apartment:
+    def view(self, id_apartment: int) -> Apartment:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
         query = "SELECT * from apartment WHERE id_apartment=?"
@@ -37,7 +37,7 @@ class ApartmentRepo:
         return apartment
 
 
-    def view_by_username(username: str) -> list[Apartment]:
+    def view_by_username(self, username: str) -> list[Apartment]:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
         query = "SELECT * from apartment WHERE username=?"
@@ -49,7 +49,7 @@ class ApartmentRepo:
         return apartments
 
 
-    def view_all() -> list[Apartment]:
+    def view_all(self) -> list[Apartment]:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
         query = "SELECT * from apartment"
@@ -61,7 +61,7 @@ class ApartmentRepo:
         return apartments
     
 
-    def update(apartment: Apartment) -> None: 
+    def update(self, apartment: Apartment) -> None: 
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
         query = "UPDATE apartment SET area=?, max_people=?, address=?, availability=?, username=? WHERE id_apartment=?"
@@ -76,7 +76,7 @@ class ApartmentRepo:
         conn.close()
 
 
-    def delete(id_apartment: int) -> None:
+    def delete(self, id_apartment: int) -> None:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
         query = "DELETE FROM apartment WHERE id_apartment=?"

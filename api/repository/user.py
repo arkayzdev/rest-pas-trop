@@ -1,18 +1,18 @@
 import sqlite3
 from api.model.user import User
-import hashlib
+from api.functions.hash import hash_password
 
 class UserRepo:
-    def create() -> None:
+    def create(self) -> None:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
-        query = "CREATE TABLE IF NOT EXISTS user (id INTEGER AUTOINCREMENT PRIMARY KEY, username TEXT, first_name TEXT, last_name TEXT, password TEXT, role TEXT DEFAULT 'Client')"
+        query = "CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY AUTOINCREMENT, username CHAR(60), first_name CHAR(30), last_name CHAR(30), password CHAR(64), role CHAR(10) DEFAULT 'Client')"
         cur.execute(query)
         conn.commit()
         conn.close()
 
 
-    def insert(user: User) -> None:
+    def insert(self, user: User) -> None:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
         query = "INSERT INTO user (username, first_name, last_name, password) VALUES (?,?,?,?)"
@@ -20,13 +20,13 @@ class UserRepo:
             user.username,
             user.first_name,
             user.last_name,
-            hashlib.sha512(user.password.encode('UTF-8'))
+            hash_password(user.password)
             ))
         conn.commit()
         conn.close()
 
 
-    def view(username: str) -> User:
+    def view(self, username: str) -> User:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
         query = "SELECT * from user WHERE username=?"
@@ -38,7 +38,7 @@ class UserRepo:
         return user
 
 
-    def view_all() -> list[User]:
+    def view_all(self) -> list[User]:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
         query = "SELECT * from user"
@@ -51,7 +51,7 @@ class UserRepo:
         return users
     
 
-    def update(user: User) -> None: 
+    def update(self, user: User) -> None: 
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
         query = "UPDATE user SET username=? first_name=?, last_name=?, password=?, role=? WHERE username=?"
@@ -59,14 +59,14 @@ class UserRepo:
             user.username,
             user.first_name,
             user.last_name,
-            hashlib.sha512(user.password.encode('UTF-8')),
+            hash_password(user.password),
             user.role,
         ))  
         conn.commit()
         conn.close()
 
 
-    def delete(username: str) -> None:
+    def delete(self, username: str) -> None:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
         query = "DELETE FROM user WHERE username=?"
@@ -75,7 +75,7 @@ class UserRepo:
         conn.close()
 
 
-    def delete_all() -> None:
+    def delete_all(self) -> None:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
         query = "DELETE FROM user"
@@ -84,7 +84,7 @@ class UserRepo:
         conn.close()
 
 
-    def get_id(username: str) -> str:
+    def get_id(self, username: str) -> str:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
         query = "SELECT id WHERE username=?"
@@ -97,7 +97,7 @@ class UserRepo:
         return None
     
 
-    def get_password(username: str) -> str:
+    def get_password(self, username: str) -> str:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
         query = "SELECT password WHERE username=?"
@@ -108,7 +108,7 @@ class UserRepo:
         return row[0]
     
     
-    def get_role(username: str) -> str:
+    def get_role(self, username: str) -> str:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
         query = "SELECT role WHERE username=?"
