@@ -3,7 +3,7 @@ from api.model.apartment import Apartment
 
 class ApartmentService:
     def __init__(self) -> None:
-        self.apartment_repo = ApartmentRepo
+        self.apartment_repo = ApartmentRepo()
         
     def create(self, apartment: Apartment) -> None:
         self.apartment_repo.insert(apartment)    

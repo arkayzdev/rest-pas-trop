@@ -26,6 +26,6 @@ class Reservation:
         return {
             'reservation': {
                 'id_reservation': self.id_reservation,
-                'url': f'{os.getenv("hostname")}{self.id_reservation}'
+                'url': f'{os.getenv("hostname")}reservation/{self.id_reservation}'
             }
         }

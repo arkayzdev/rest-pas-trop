@@ -12,7 +12,7 @@ class User:
         self.password = password
         self.role = role
         
-    def serialize(self):
+    def user_to_json(self):
         return {
             'username': self.username,
             'first_name': self.first_name,
@@ -23,6 +23,6 @@ class User:
         return {
             'user': {
                 'username' : self.username,
-                'url': f'{os.getenv("hostname")}{self.username}'
+                'url': f'{os.getenv("hostname")}user/{self.username}'
             }
         }

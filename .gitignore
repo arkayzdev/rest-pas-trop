@@ -189,5 +189,3 @@ pyrightconfig.json
 .history
 .ionide
 
-#DATABASE
-database/

@@ -3,7 +3,7 @@ from api.model.reservation import Reservation
 
 class ReservationService:
     def __init__(self) -> None:
-        self.reservation_repo = ReservationRepo
+        self.reservation_repo = ReservationRepo()
 
     def create(self, reservation: Reservation) -> None:
         self.reservation_repo.insert(reservation)    

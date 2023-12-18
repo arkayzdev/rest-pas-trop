@@ -3,7 +3,7 @@ from api.service.reservation import ReservationService
 
 reservation_blueprint = Blueprint('reservation', __name__)
 
-service = ReservationService
+service = ReservationService()
 
 @reservation_blueprint.route('/', methods=['POST'])
 def create_reservation():

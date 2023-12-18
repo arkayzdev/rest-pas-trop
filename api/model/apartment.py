@@ -27,6 +27,6 @@ class Apartment:
         return {
         'apartment': {
             'id_apartment' : self.id_apartment,
-            'url': f'{os.getenv("hostname")}{self.id_apartment}'
+            'url': f'{os.getenv("hostname")}apartment/{self.id_apartment}'
         }
     }

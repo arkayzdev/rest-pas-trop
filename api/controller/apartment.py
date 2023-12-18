@@ -1,13 +1,26 @@
 from flask import Blueprint, request, jsonify
 from api.service.apartment import ApartmentService
+from api.service.authentification import AuthentificationService
 
 apartment_blueprint = Blueprint('apartment', __name__)
 
-service = ApartmentService
+service = ApartmentService()
+auth = AuthentificationService()
 
 @apartment_blueprint.route('/', methods=['POST'])
 def create_apartment():
-    pass
+    authorization_header = request.headers.get('Authorization')
+    if not authorization_header or not authorization_header.startswith('Basic '):
+        return jsonify({'message': 'Authorization header missing or invalid'}), 401
+    username, password = auth.extract_credentials(authorization_header)
+
+    if username == "" or password == "":
+        return jsonify({'message': 'Invalid credentials format'}), 401
+
+    if not auth.authenticate_user(username, password):
+        return jsonify({'message': 'Invalid username or password'}), 401
+
+
 
 @apartment_blueprint.route('/', methods=['GET'])
 def get_apartments():

@@ -3,7 +3,7 @@ from api.model.user import User
 
 class UserService:
     def __init__(self) -> None:
-        self.user_repo = UserRepo
+        self.user_repo = UserRepo()
 
     def create(self, user: User) -> None:
         self.user_repo.insert(user)    
@@ -12,9 +12,10 @@ class UserService:
         return self.user_repo.view(username)
     
     def get_all(self) -> list[User]:
-        return self.user_repo.view_all()
+        users = self.user_repo.view_all()
+        return [user.user_to_json() for user in users]
 
-    def update(self, user: User):
+    def update(self, user: User) -> None:
         self.user_repo.update(user)
 
     def delete(self, user: User) -> None:
