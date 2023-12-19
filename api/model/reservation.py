@@ -12,7 +12,7 @@ class Reservation:
         self.username = username
     
     
-    def serialize(self):
+    def reservation_to_json(self):
         return {
             'id_reservation': self.id_reservation,
             'start_date': self.start_date,

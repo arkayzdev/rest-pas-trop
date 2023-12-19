@@ -13,7 +13,7 @@ class Apartment:
         self.username = username
 
 
-    def serialize(self):
+    def apartment_to_json(self):
         return {
             'id_apartment': self.id_apartment,
             'area': self.area,
