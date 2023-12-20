@@ -17,7 +17,7 @@ def create_apartment():
     if username == "" or password == "":
         return jsonify({'message': 'Invalid credentials format'}), 401
 
-    if not auth.authenticate_user(username, password):
+    if not auth.authenticate_admin(username, password):
         return jsonify({'message': 'Invalid username or password'}), 401
 
 
