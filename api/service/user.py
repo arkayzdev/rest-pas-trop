@@ -40,4 +40,12 @@ class UserService:
         if self.user_repo.get_id(username):
             return True
         return False
-    
+
+    def check_values(self, user: User) -> bool:
+        if (len(user.username) > 60):
+            return False
+        if (len(user.first_name) > 30):
+            return False
+        if (len(user.last_name) > 30):
+            return False
+        return True    

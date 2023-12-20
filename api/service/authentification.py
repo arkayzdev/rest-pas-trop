@@ -37,7 +37,11 @@ class AuthentificationService:
             return None, None
         
 
+<<<<<<< HEAD
     def authenticate_admin(self, username:str, password: str) -> bool:
+=======
+    def authenticate_user(self, username:str, password: str) -> bool:
+>>>>>>> feature/controller
         if self.user_api.service.check_user(username):
             if self.check_password(password):
                 if self.check_admin(username):

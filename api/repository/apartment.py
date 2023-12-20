@@ -6,7 +6,7 @@ class ApartmentRepo:
     def create(self) -> None:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
-        query = "CREATE TABLE IF NOT EXISTS apartment (id_apartment INTEGER PRIMARY KEY AUTOINCREMENT, area INTEGER, max_people INTEGER, address TEXT, availability BOOLEAN, username TEXT)"
+        query = "CREATE TABLE IF NOT EXISTS apartment (id_apartment INTEGER PRIMARY KEY AUTOINCREMENT, area INTEGER, max_people INTEGER, address TEXT, availability BOOLEAN, username CHAR(60))"
         cur.execute(query)
         conn.commit()
         conn.close()
