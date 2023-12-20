@@ -6,7 +6,7 @@ class ReservationRepo:
     def create(self) -> None:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
-        query = "CREATE TABLE IF NOT EXISTS reservation (id_reservation INTEGER PRIMARY KEY AUTOINCREMENT, start_date TIMESTAMP, end_date TIMESTAMP, price INTEGER, username TEXT)"
+        query = "CREATE TABLE IF NOT EXISTS reservation (id_reservation INTEGER PRIMARY KEY AUTOINCREMENT, start_date TIMESTAMP, end_date TIMESTAMP, price INTEGER, username CHAR(60))"
         cur.execute(query)
         conn.commit()
         conn.close()

@@ -32,7 +32,7 @@ class UserRepo:
         query = "SELECT * from user WHERE username=?"
         cur.execute(query, (username,))
         row = cur.fetchone()
-
+        conn.close()
         user = User(row[0], row[1], row[2], row[3], row[4], row[5])
       
         return user
@@ -44,7 +44,7 @@ class UserRepo:
         query = "SELECT * from user"
         cur.execute(query)
         rows = cur.fetchall()
-
+        conn.close()
         users = [
             User(row[0], row[1], row[2], row[3], row[4], row[5]) for row in rows
         ]
@@ -87,11 +87,11 @@ class UserRepo:
     def get_id(self, username: str) -> str:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
-        query = "SELECT id WHERE username=?"
+        query = "SELECT id FROM user WHERE username=?"
         cur.execute(query, (username, ))
         conn.commit()
-        conn.close()
         row = cur.fetchone()
+        conn.close()
         if row:
             return row[0]
         return None
@@ -100,22 +100,22 @@ class UserRepo:
     def get_password(self, username: str) -> str:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
-        query = "SELECT password WHERE username=?"
+        query = "SELECT password FROM user WHERE username=?"
         cur.execute(query, (username, ))
         conn.commit()
-        conn.close()
         row = cur.fetchone()
+        conn.close()
         return row[0]
     
     
     def get_role(self, username: str) -> str:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
-        query = "SELECT role WHERE username=?"
+        query = "SELECT role FROM user WHERE username=?"
         cur.execute(query, (username, ))
         conn.commit()
-        conn.close()
         row = cur.fetchone()
+        conn.close()
         return row[0]
         
 

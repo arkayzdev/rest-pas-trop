@@ -9,7 +9,7 @@ class UserService:
         self.user_repo.insert(user)    
 
     def get(self, username: str) -> User:
-        return self.user_repo.view(username)
+        return self.user_repo.view(username).user_to_json()
     
     def get_all(self) -> list[User]:
         users = self.user_repo.view_all()
@@ -30,11 +30,11 @@ class UserService:
         return False
 
 
-    def check_values(self, username: str, first_name: str, last_name: str) -> bool:
-        if (len(username) > 60):
+    def check_values(self, user: User) -> bool:
+        if (len(user.username) > 60):
             return False
-        if (len(first_name) > 30):
+        if (len(user.first_name) > 30):
             return False
-        if (len(last_name) > 30):
+        if (len(user.last_name) > 30):
             return False
         return True    
