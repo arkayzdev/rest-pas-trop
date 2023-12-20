@@ -1,3 +1,8 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 class Apartment:
     def __init__(self, id_apartment: int, area: int, max_people: int, address: str, availability: bool, username: str) -> None:
         self.id_apartment = id_apartment
@@ -8,4 +13,20 @@ class Apartment:
         self.username = username
 
 
+    def apartment_to_json(self):
+        return {
+            'id_apartment': self.id_apartment,
+            'area': self.area,
+            'max_people': self.max_people,
+            'address': self.address,
+            'availability': self.availability
+        }
     
+
+    def json_fmt(self):
+        return {
+        'apartment': {
+            'id_apartment' : self.id_apartment,
+            'url': f'{os.getenv("hostname")}apartment/{self.id_apartment}'
+        }
+    }

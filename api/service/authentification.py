@@ -1,12 +1,12 @@
-from api.repository.user import UserRepo
-from api.service.user import UserService
+from repository.user import UserRepo
+from service.user import UserService
 import hashlib
 import base64
 
 class AuthentificationService:
     def __init__(self) -> None:
-        self.user_repo = UserRepo
-        self.user_service = UserService
+        self.user_repo = UserRepo()
+        self.user_service = UserService()
 
 
     def check_password(self, username: str, password: str) -> bool:
@@ -23,7 +23,7 @@ class AuthentificationService:
         return False
     
 
-    def extract_credentials(authorization_header: base64) -> tuple:
+    def extract_credentials(self, authorization_header: base64) -> tuple:
         try:
             # Extract the encoded credentials part after "Basic "
             encoded_credentials = authorization_header.split(" ")[1]
@@ -38,7 +38,7 @@ class AuthentificationService:
         
 
     def authenticate_user(self, username:str, password: str) -> bool:
-        if self.user_service.check_user(username):
+        if self.user_api.service.check_user(username):
             if self.check_password(password):
                 if self.check_admin(username):
                     return True
