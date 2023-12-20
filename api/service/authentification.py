@@ -1,5 +1,5 @@
-from api.repository.user import UserRepo
-from api.service.user import UserService
+from repository.user import UserRepo
+from service.user import UserService
 import hashlib
 import base64
 

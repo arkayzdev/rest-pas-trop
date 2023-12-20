@@ -1,6 +1,6 @@
-from api.repository.user import UserRepo
-from api.repository.reservation import ReservationRepo
-from api.repository.apartment import ApartmentRepo 
+from repository.user import UserRepo
+from repository.reservation import ReservationRepo
+from repository.apartment import ApartmentRepo 
 
 user = UserRepo()
 reservation = ReservationRepo()

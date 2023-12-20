@@ -1,7 +1,7 @@
 from flask import Flask
-from api.controller.user import user_blueprint
-from api.controller.reservation import reservation_blueprint
-from api.controller.apartment import apartment_blueprint
+from controller.user import user_blueprint
+from controller.reservation import reservation_blueprint
+from controller.apartment import apartment_blueprint
 
 app = Flask(__name__)
 

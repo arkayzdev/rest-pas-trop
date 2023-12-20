@@ -1,5 +1,5 @@
-from api.repository.reservation import ReservationRepo
-from api.model.reservation import Reservation
+from repository.reservation import ReservationRepo
+from model.reservation import Reservation
 
 class ReservationService:
     def __init__(self) -> None:

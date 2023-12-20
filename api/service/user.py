@@ -1,5 +1,5 @@
-from api.repository.user import UserRepo
-from api.model.user import User
+from repository.user import UserRepo
+from model.user import User
 
 class UserService:
     def __init__(self) -> None:

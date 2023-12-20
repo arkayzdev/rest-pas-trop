@@ -1,6 +1,6 @@
 import sqlite3
-from api.model.user import User
-from api.functions.hash import hash_password
+from model.user import User
+from functions.hash import hash_password
 
 class UserRepo:
     def create(self) -> None:

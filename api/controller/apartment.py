@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
-from api.service.apartment import ApartmentService
-from api.service.authentification import AuthentificationService
+from service.apartment import ApartmentService
+from service.authentification import AuthentificationService
 
 apartment_blueprint = Blueprint('apartment', __name__)
 

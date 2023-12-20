@@ -1,5 +1,5 @@
 import sqlite3
-from api.model.apartment import Apartment
+from model.apartment import Apartment
 
 class ApartmentRepo:
 

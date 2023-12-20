@@ -1,5 +1,5 @@
 import sqlite3
-from api.model.reservation import Reservation
+from model.reservation import Reservation
 
 class ReservationRepo:
 

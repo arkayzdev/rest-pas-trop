@@ -1,5 +1,5 @@
-from api.repository.apartment import ApartmentRepo
-from api.model.apartment import Apartment
+from repository.apartment import ApartmentRepo
+from model.apartment import Apartment
 
 class ApartmentService:
     def __init__(self) -> None:
