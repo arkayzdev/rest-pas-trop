@@ -43,11 +43,12 @@ class ApartmentRepo:
         query = "SELECT * from apartment WHERE username=?"
         cur.execute(query,(username, ))
         rows = cur.fetchall()
-        apartments = [
-            Apartment(row[0], row[1], row[2], row[3], True if row[4] == 1 else False, row[5]) for row in rows
-        ]
-        return apartments
-
+        if rows:
+            apartments = [
+                Apartment(row[0], row[1], row[2], row[3], True if row[4] == 1 else False, row[5]) for row in rows
+            ]
+            return apartments
+        return None
 
     def view_all(self) -> list[Apartment]:
         conn = sqlite3.connect('database/rest_pas_trop.db')

@@ -42,11 +42,12 @@ class ReservationRepo:
         query = "SELECT * from reservation WHERE username=?"
         cur.execute(query,(username, ))
         rows = cur.fetchall()
-        reservations = [
-            Reservation(row[0], row[1], row[2], row[3], row[4]) for row in rows
-        ]
-        return reservations
-    
+        if rows:
+            reservations = [
+                Reservation(row[0], row[1], row[2], row[3], row[4]) for row in rows
+            ]
+            return reservations
+        return None
 
     def view_all(self) -> list[Reservation]:
         conn = sqlite3.connect('database/rest_pas_trop.db')

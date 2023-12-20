@@ -14,6 +14,12 @@ class ReservationService:
     def get_all(self) -> list[Reservation]:
         return self.reservation_repo.view_all()
 
+    def get_by_username(self, username: str) -> list[Reservation]:
+        reservations = self.reservation_repo.view_by_username(username)
+        if reservations:
+            return [reservation.reservation_to_json() for reservation in reservations]
+        return None
+
     def update(self, reservation: Reservation):
         self.reservation_repo.update(reservation)
 
