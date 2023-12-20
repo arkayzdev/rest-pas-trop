@@ -3,6 +3,10 @@ from service.reservation import ReservationService
 from service.apartment import ApartmentService
 from model.user import User
 
+import exception.repository as ExRepo
+import exception.service as ExServ
+
+
 class UserService:
     def __init__(self) -> None:
         self.user_repo = UserRepo()
@@ -10,21 +14,36 @@ class UserService:
         self.apartment_service = ApartmentService()
 
     def create(self, user: User) -> None:
-        self.user_repo.insert(user)    
+        self.user_repo.insert(user)
 
     def get(self, username: str) -> dict:
         user = self.user_repo.view(username)
         user_json = user.user_to_json()
-        user_json['apartment'] = self.apartment_service.get_by_username(username)
-        user_json['reservation'] = self.reservation_service.get_by_username(username)
+        user_json["apartment"] = self.apartment_service.get_by_username(username)
+        user_json["reservation"] = self.reservation_service.get_by_username(username)
         return user_json
-    
+
     def get_all(self) -> list[dict]:
-        users = self.user_repo.view_all()
-        users_json = [user.user_to_json() for user in users]
-        for user_json in users_json:
-            user_json['apartment'] = self.apartment_service.get_by_username(user_json['username'])
-            user_json['reservation'] = self.apartment_service.get_by_username(user_json['username'])
+        try:
+            users = self.user_repo.view_all()
+            users_json = [user.user_to_json() for user in users]
+            for user_json in users_json:
+                user_json["apartment"] = self.apartment_service.get_by_username(
+                    user_json["username"]
+                )
+                user_json["reservation"] = self.apartment_service.get_by_username(
+                    user_json["username"]
+                )
+        except ExRepo.RepositoryException as e:
+            raise ExServ.ServiceException(
+                e.message,
+                e.code,
+            )
+        except Exception:
+            raise ExServ.ServiceException(
+                "A general service error occurred.",
+                500,
+            )
         return users_json
 
     def update(self, user: User) -> None:
@@ -40,4 +59,3 @@ class UserService:
         if self.user_repo.get_id(username):
             return True
         return False
-    
