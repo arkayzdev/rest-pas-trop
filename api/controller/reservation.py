@@ -25,7 +25,7 @@ def create_reservation():
     reservation = Reservation(None, req_data['start_date'], req_data['end_date'], req_data['price'], req_data['username'], None)    
     if not service.check_values(reservation):
         return jsonify({'message': 'The type of fields entered is not respected'}), 400    
-    print(service.create(reservation))
+    service.create(reservation)
     return jsonify({'message': 'Success creating new reservation!'}), 200
     # return jsonify({'message': 'Error !'}), 404
 

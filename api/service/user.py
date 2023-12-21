@@ -30,8 +30,8 @@ class UserService:
     def update(self, user: User) -> None:
         self.user_repo.update(user)
 
-    def delete(self, user: User) -> None:
-        self.user_repo.delete(user)
+    def delete(self, username: str) -> None:
+        self.user_repo.delete(username)
 
     def delete_all(self) -> None:
         self.user_repo.delete_all()

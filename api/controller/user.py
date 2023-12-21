@@ -58,16 +58,14 @@ def update_user(username: str):
     if not service.check_user(user):
             return jsonify({'message': 'This username does not exist'}), 400
 
-    user.username = username
     service.update(user)
     return jsonify({'message': f'Successfully updated user: {username}'}), 200
 
 
 @user_blueprint.route('/<string:username>', methods=['DELETE'])
 def delete_user(username: str):
-    user = service.get(username)
-    if user:
-        service.delete(user)
+    if service.check_user(username):
+        service.delete(username)
         return jsonify({'message': f'Successfully deleted user: {username}'}), 200
     else:
         return jsonify({'message': 'User not found'}), 404
