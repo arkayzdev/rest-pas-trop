@@ -5,13 +5,14 @@ from service.user import UserService
 from model.apartment import Apartment
 
 
-apartment_blueprint = Blueprint('apartment', __name__)
+apartment_blueprint = Blueprint("apartment", __name__)
 
 user_service = UserService()
 service = ApartmentService()
 auth = AuthentificationService()
 
-@apartment_blueprint.route('/', methods=['POST'])
+
+@apartment_blueprint.route("/", methods=["POST"])
 def create_apartment():
     # authorization_header = request.headers.get('Authorization')
     # if not authorization_header or not authorization_header.startswith('Basic '):
@@ -23,41 +24,51 @@ def create_apartment():
 
     # if not auth.authenticate_admin(username, password):
     #     return jsonify({'message': 'Invalid username or password'}), 401
-    
+
     req_data = request.get_json()
-    if all(key in req_data for key in ("username", "area", "max_people", "address", "availability")):
-        apartment = Apartment(None, req_data['area'], req_data['max_people'], req_data['address'], bool(req_data['availability']), req_data['username'])
+    if all(
+        key in req_data
+        for key in ("username", "area", "max_people", "address", "availability")
+    ):
+        apartment = Apartment(
+            None,
+            req_data["area"],
+            req_data["max_people"],
+            req_data["address"],
+            bool(req_data["availability"]),
+            req_data["username"],
+        )
     else:
-        return jsonify({'message' : 'Arguments are not valid.', 'error': 'Bad Request'}), 400 
-    
+        return (
+            jsonify({"message": "Arguments are not valid.", "error": "Bad Request"}),
+            400,
+        )
+
     if not service.check_values(apartment):
-        return jsonify({'message': 'The type of fields entered is not respected'}), 400
-    
+        return jsonify({"message": "The type of fields entered is not respected"}), 400
+
     if not user_service.check_user(apartment.username):
-        return jsonify({'message': 'The username you entered does not exist'}), 400
+        return jsonify({"message": "The username you entered does not exist"}), 400
 
     service.create(apartment)
-    return jsonify({'message': 'Success creating new apartment !'}), 200
-  
+    return jsonify({"message": "Success creating new apartment !"}), 200
 
 
-
-@apartment_blueprint.route('/', methods=['GET'])
+@apartment_blueprint.route("/", methods=["GET"])
 def get_apartments():
     return jsonify(service.get_all())
 
 
-@apartment_blueprint.route('/<int:apartment_id>', methods=['GET'])
+@apartment_blueprint.route("/<int:apartment_id>", methods=["GET"])
 def get_apartment_id(apartment_id: int):
     apartment = service.get(apartment_id)
     if apartment:
         return jsonify(apartment)
     else:
-        return jsonify({'message': 'Apartment not found'}), 404
+        return jsonify({"message": "Apartment not found"}), 404
 
 
-
-@apartment_blueprint.route('/<int:apartment_id>', methods=['PATCH'])
+@apartment_blueprint.route("/<int:apartment_id>", methods=["PATCH"])
 def update_apartment(apartment_id: int):
     req_data = request.get_json()
     if all(key in req_data for key in ("username", "area", "max_people", "address", "availability")):
@@ -75,10 +86,10 @@ def update_apartment(apartment_id: int):
         return jsonify({'message': 'The username you entered does not exist'}), 400
 
     service.update(apartment)
-    return jsonify({'message': f'Successfully updated apartment: {apartment_id}'}), 200
+    return jsonify({"message": f"Successfully updated apartment: {apartment_id}"}), 200
 
 
-@apartment_blueprint.route('/<int:apartment_id>', methods=['DELETE'])
+@apartment_blueprint.route("/<int:apartment_id>", methods=["DELETE"])
 def delete_apartment(apartment_id: int):
     if not service.get(apartment_id):
        return jsonify({'message': 'Apartment not found'}), 404
@@ -87,7 +98,7 @@ def delete_apartment(apartment_id: int):
     return jsonify({'message': f'Successfully deleted apartment: {apartment_id}'}), 200
 
 
-@apartment_blueprint.route('/', methods=['DELETE'])
+@apartment_blueprint.route("/", methods=["DELETE"])
 def delete_apartments():
     service.delete_all()
-    return jsonify({'message': 'All apartments deleted successfully'}), 200
+    return jsonify({"message": "All apartments deleted successfully"}), 200
