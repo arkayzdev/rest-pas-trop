@@ -69,6 +69,23 @@ class ReservationRepo:
             raise ExRepo.RepositoryException(500)
         return None
 
+    def view_by_apartment(self, id_apartment):
+        try:
+            conn = sqlite3.connect("database/rest_pas_trop.db")
+            cur = conn.cursor()
+            query = "SELECT * from reservation WHERE id_apartment=?"
+            cur.execute(query, (username,))
+            rows = cur.fetchall()
+            conn.close()
+            if rows:
+                reservations = [
+                    Reservation(row[0], row[1], row[2], row[3], row[4], row[5]) for row in rows
+                ]
+                return reservations
+        except Exception:
+            raise ExRepo.RepositoryException(500)
+        return None
+
     def view_all(self) -> list[Reservation]:
         try:
             conn = sqlite3.connect("database/rest_pas_trop.db")

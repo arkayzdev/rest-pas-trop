@@ -1,12 +1,15 @@
 from repository.apartment import ApartmentRepo
 from model.apartment import Apartment
-
+from service.reservation import ReservationService
+from repository.user import UserRepo
 import exception.repository as ExRepo
 import exception.service as ExServ
 
 class ApartmentService:
     def __init__(self) -> None:
         self.apartment_repo = ApartmentRepo()
+        self.reservation_service = ReservationService()
+        self.user_repo = UserRepo()
         
     def create(self, apartment: Apartment) -> None:
         try:
@@ -19,6 +22,9 @@ class ApartmentService:
     def get(self, id_apartment: int) -> Apartment:
         try:
             apartment = self.apartment_repo.view(id_apartment)
+            apartment_json = aparment_json.apartment_to_json()
+            apartment_json['reservation'] = self.reservation_service.get_by_apartment(apartment.id_apartment)
+            apartment_json['user'] = self.user_repo.view(apartment.username).json_fmt()
         except ExRepo.RepositoryException as e:
             raise ExServ.ServiceException(e.code)
         except Exception:
@@ -40,7 +46,7 @@ class ApartmentService:
 
     def get_for_reservation(self, id_apartment: int) -> Apartment:
         try:
-            apartment = self.apartment_repo.view(id_apartment)
+            apartment = self.apartment_repo.view_by_reservation(id_apartment)
         except ExRepo.RepositoryException as e:
             raise ExServ.ServiceException(e.code)
         except Exception:
@@ -56,6 +62,12 @@ class ApartmentService:
             raise ExServ.ServiceException(e.code)
         except Exception:
             raise ExServ.ServiceException(500)
+        apartments_json = []
+        for apartment in aparments:
+            apartment_json = aparment_json.apartment_to_json()
+            apartment_json['reservation'] = self.reservation_service.get_by_apartment(apartment.id_apartment)
+            apartment_json['user'] = self.user_repo.view(apartment.username).json_fmt()
+            apartments_json.append(apartment_json)
         return [apartment.apartment_to_json() for apartment in apartments]
 
     def update(self, apartment: Apartment):

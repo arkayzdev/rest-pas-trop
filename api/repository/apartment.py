@@ -54,6 +54,7 @@ class ApartmentRepo:
         except Exception:
             raise ExRepo.RepositoryException(500)
 
+
     def view_by_username(self, username: str) -> list[Apartment]:
         try:
             conn = sqlite3.connect("database/rest_pas_trop.db")
