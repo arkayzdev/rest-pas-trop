@@ -83,7 +83,7 @@ def update_apartment(apartment_id: int):
     except ExServ.ServiceException as e:
         raise ExCon.ControllerException(e.code)
     except Exception:
-        raise ExCon.ControllerException(500)
+        raise ExCon.ControllerException(400)
  
     if not service.check_values(apartment):
         raise ExCon.ControllerException(400)    
