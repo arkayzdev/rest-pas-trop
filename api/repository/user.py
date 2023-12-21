@@ -93,18 +93,19 @@ class UserRepo:
         try:
             conn = sqlite3.connect("database/rest_pas_trop.db")
             cur = conn.cursor()
-            query = "DELETE FROM user WHERE username=?"
+
+            query = "DELETE FROM user WHERE username=? AND role != 'Interne'"
             cur.execute(query, (username,))
             conn.commit()
             conn.close()
         except Exception:
             raise ExRepo.RepositoryException(500)
-
+        
     def delete_all(self) -> None:
         try:
             conn = sqlite3.connect("database/rest_pas_trop.db")
             cur = conn.cursor()
-            query = "DELETE FROM user"
+            query = "DELETE FROM user WHERE role != 'Interne' "
             cur.execute(query)
             conn.commit()
             conn.close()
@@ -130,7 +131,7 @@ class UserRepo:
         try:
             conn = sqlite3.connect("database/rest_pas_trop.db")
             cur = conn.cursor()
-            query = "SELECT password WHERE username=?"
+            query = "SELECT password FROM user WHERE username=?"
             cur.execute(query, (username,))
             conn.commit()
             row = cur.fetchone()
@@ -146,7 +147,7 @@ class UserRepo:
         try:
             conn = sqlite3.connect("database/rest_pas_trop.db")
             cur = conn.cursor()
-            query = "SELECT role WHERE username=?"
+            query = "SELECT role FROM user WHERE username=?"
             cur.execute(query, (username,))
             conn.commit()
             row = cur.fetchone()

@@ -75,6 +75,19 @@ def get_user(username):
 
 @user_blueprint.route("/<string:username>", methods=["PATCH"])
 def update_user(username: str):
+    ### AUTH ####
+    authorization_header = request.headers.get('Authorization')
+    if not authorization_header or not authorization_header.startswith('Basic '):
+        raise ExCon.ControllerException(401)
+    admin_username, admin_password = auth.extract_credentials(authorization_header)
+
+    if admin_username == "" or admin_password == "":
+        raise ExCon.ControllerException(401)
+
+    if auth.authenticate_admin(admin_username, admin_password):
+        raise ExCon.ControllerException(401)
+    ########
+
     try:
         req_data = request.get_json()
         all(
@@ -106,6 +119,21 @@ def update_user(username: str):
 
 @user_blueprint.route("/<string:username>", methods=["DELETE"])
 def delete_user(username: str):
+    ### AUTH ####
+    authorization_header = request.headers.get('Authorization')
+    if not authorization_header or not authorization_header.startswith('Basic '):
+        raise ExCon.ControllerException(401)
+    admin_username, admin_password = auth.extract_credentials(authorization_header)
+
+    if admin_username == "" or admin_password == "":
+        raise ExCon.ControllerException(401)
+    
+    if auth.check_admin(admin_username) == True:
+        raise ExCon.ControllerException(401)
+
+    if auth.authenticate_admin(admin_username, admin_password):
+        raise ExCon.ControllerException(401)
+    ########
     user = service.check_user(username)
     if user:
         service.delete(username)
@@ -116,5 +144,17 @@ def delete_user(username: str):
 
 @user_blueprint.route("/", methods=["DELETE"])
 def delete_users():
+    ## AUTH ####
+    authorization_header = request.headers.get('Authorization')
+    if not authorization_header or not authorization_header.startswith('Basic '):
+        raise ExCon.ControllerException(401)
+    admin_username, admin_password = auth.extract_credentials(authorization_header)
+
+    if admin_username == "" or admin_password == "":
+        raise ExCon.ControllerException(401)
+
+    if auth.authenticate_admin(admin_username, admin_password):
+        raise ExCon.ControllerException(401)
+    ########
     service.delete_all()
     return jsonify({"message": "All users deleted successfully"}), 200
