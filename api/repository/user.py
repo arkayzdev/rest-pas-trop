@@ -1,3 +1,4 @@
+# AAA
 import sqlite3
 from model.user import User
 from functions.hash import hash_password
