@@ -71,8 +71,8 @@ def get_user(username):
             return jsonify(user)
     except ExServ.ServiceException as e:
         raise ExCon.ControllerException(e.code)
-    except Exception:
-        raise ExCon.ControllerException(503)
+    # except Exception:
+    #     raise ExCon.ControllerException(503)
 
 
 @user_blueprint.route("/<string:username>", methods=["PATCH"])
