@@ -51,6 +51,10 @@ def update_user(username: str):
         user = User(None, req_data['username'], req_data['first_name'], req_data['last_name'], req_data['password'], None)
     else:
         return jsonify({'message' : 'Arguments are not valid.', 'error': 'Bad Request'}), 400
+    
+    if not service.check_user(user):
+            return jsonify({'message': 'This username does not exist'}), 400
+
     user.username = username
     service.update(user)
     return jsonify({'message': f'Successfully updated user: {username}'}), 200
