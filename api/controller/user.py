@@ -40,8 +40,6 @@ def create_user():
 
     try:
         service.create(user)
-    except ExServ.ServiceException as e:
-        raise ExCon.ControllerException(e.code)
     except Exception:
         raise ExCon.ControllerException(500)
 
@@ -71,26 +69,26 @@ def get_user(username):
             return jsonify(user)
     except ExServ.ServiceException as e:
         raise ExCon.ControllerException(e.code)
-    # except Exception:
-    #     raise ExCon.ControllerException(503)
+    except Exception:
+        raise ExCon.ControllerException(500)
 
 
 @user_blueprint.route("/<string:username>", methods=["PATCH"])
 def update_user(username: str):
     try:
         req_data = request.get_json()
-        if all(
+        all(
             key in req_data
             for key in ("username", "first_name", "last_name", "password")
-        ):
-            user = User(
-                None,
-                req_data["username"],
-                req_data["first_name"],
-                req_data["last_name"],
-                req_data["password"],
-                None,
-            )
+        )
+        user = User(
+            None,
+            req_data["username"],
+            req_data["first_name"],
+            req_data["last_name"],
+            req_data["password"],
+            None,
+        )
     except ExServ.ServiceException as e:
         raise ExCon.ControllerException(e.code)
     except Exception:
