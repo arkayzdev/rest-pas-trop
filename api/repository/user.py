@@ -54,13 +54,13 @@ class UserRepo:
     def update(self, user: User) -> None: 
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
-        query = "UPDATE user SET username=? first_name=?, last_name=?, password=?, role=? WHERE username=?"
+        query = "UPDATE user SET username=?, first_name=?, last_name=?, password=? WHERE id=?"
         cur.execute(query, (
             user.username,
             user.first_name,
             user.last_name,
             hash_password(user.password),
-            user.role,
+            user.id
         ))  
         conn.commit()
         conn.close()
@@ -88,6 +88,7 @@ class UserRepo:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
         query = "SELECT id FROM user WHERE username=?"
+        print(username)
         cur.execute(query, (username, ))
         conn.commit()
         row = cur.fetchone()

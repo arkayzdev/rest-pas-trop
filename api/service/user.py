@@ -27,7 +27,12 @@ class UserService:
             user_json['reservation'] = self.apartment_service.get_by_username(user_json['username'])
         return users_json
 
-    def update(self, user: User) -> None:
+    def get_id(self, username: str):
+        return self.user_repo.get_id(username)
+
+    def update(self, user: User, username: str) -> None:
+        user.id = self.get_id(username)
+        print(user.id)
         self.user_repo.update(user)
 
     def delete(self, username: str) -> None:

@@ -45,7 +45,7 @@ def get_user(username):
 
 
 @user_blueprint.route('/<string:username>', methods=['PATCH'])
-def update_user(username: str):
+def update_user(username:str):
     req_data = request.get_json()
     if all(key in req_data for key in ("username", "first_name", "last_name", "password")):
         user = User(None, req_data['username'], req_data['first_name'], req_data['last_name'], req_data['password'], None)
@@ -55,16 +55,17 @@ def update_user(username: str):
     if not service.check_values(user):
         return jsonify({'message': 'The size of the fields entered is not respected'}), 400
     
-    if not service.check_user(user):
+    if not service.check_user(username):
             return jsonify({'message': 'This username does not exist'}), 400
 
-    service.update(user)
+    service.update(user, username)
     return jsonify({'message': f'Successfully updated user: {username}'}), 200
 
 
 @user_blueprint.route('/<string:username>', methods=['DELETE'])
 def delete_user(username: str):
-    if service.check_user(username):
+    user = service.check_user(username)
+    if user:
         service.delete(username)
         return jsonify({'message': f'Successfully deleted user: {username}'}), 200
     else:

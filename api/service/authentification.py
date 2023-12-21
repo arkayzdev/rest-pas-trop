@@ -38,7 +38,7 @@ class AuthentificationService:
         
 
     def authenticate_admin(self, username:str, password: str) -> bool:
-        if self.user_.service.check_user(username):
+        if self.user_service.check_user(username):
             if self.check_password(username, password):
                 if self.check_admin(username):
                     return True
