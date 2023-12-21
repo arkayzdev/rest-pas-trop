@@ -77,32 +77,30 @@ def get_user(username):
 
 @user_blueprint.route("/<string:username>", methods=["PATCH"])
 def update_user(username: str):
-    req_data = request.get_json()
-    if all(
-        key in req_data for key in ("username", "first_name", "last_name", "password")
-    ):
-        user = User(
-            None,
-            req_data["username"],
-            req_data["first_name"],
-            req_data["last_name"],
-            req_data["password"],
-            None,
-        )
-    else:
-        return (
-            jsonify({"message": "Arguments are not valid.", "error": "Bad Request"}),
-            400,
-        )
+    try:
+        req_data = request.get_json()
+        if all(
+            key in req_data
+            for key in ("username", "first_name", "last_name", "password")
+        ):
+            user = User(
+                None,
+                req_data["username"],
+                req_data["first_name"],
+                req_data["last_name"],
+                req_data["password"],
+                None,
+            )
+    except ExServ.ServiceException as e:
+        raise ExCon.ControllerException(e.code)
+    except Exception:
+        raise ExCon.ControllerException(400)
 
     if not service.check_values(user):
-        return (
-            jsonify({"message": "The size of the fields entered is not respected"}),
-            400,
-        )
+        raise ExCon.ControllerException(400)
 
     if not service.check_user(username):
-        return jsonify({"message": "This username does not exist"}), 400
+        raise ExCon.ControllerException(400)
 
     service.update(user, username)
     return jsonify({"message": f"Successfully updated user: {username}"}), 200
@@ -115,7 +113,7 @@ def delete_user(username: str):
         service.delete(username)
         return jsonify({"message": f"Successfully deleted user: {username}"}), 200
     else:
-        return jsonify({"message": "User not found"}), 404
+        raise ExCon.ControllerException(404)
 
 
 @user_blueprint.route("/", methods=["DELETE"])
