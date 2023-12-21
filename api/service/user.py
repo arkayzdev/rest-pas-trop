@@ -53,7 +53,12 @@ class UserService:
         return users_json
 
     def get_id(self, username: str):
-        return self.user_repo.get_id(username)
+        try:
+            return self.user_repo.get_id(username)
+        except ExRepo.RepositoryException as e:
+            raise ExServ.ServiceException(e.code)
+        except Exception:
+            raise ExServ.ServiceException(500)
 
     def update(self, user: User) -> None:
         try:
@@ -80,20 +85,15 @@ class UserService:
             raise ExServ.ServiceException(500)
 
     def check_user(self, username: str) -> bool:
-        try:
-            if self.user_repo.get_id(username):
-                return True
-            # return False
-        except ExRepo.RepositoryException as e:
-            raise ExServ.ServiceException(e.code)
-        except Exception:
-            raise ExServ.ServiceException(500)
+        if self.user_repo.get_id(username):
+            return True
+        return False
 
     def check_values(self, user: User) -> bool:
-        if len(user.username) > 60:
-            raise ExServ.ServiceException(500)
-        if len(user.first_name) > 30:
-            raise ExServ.ServiceException(500)
-        if len(user.last_name) > 30:
-            raise ExServ.ServiceException(500)
+        if len(user.username) > 60 | len(user.username) < 1:
+            return False
+        if len(user.first_name) > 30 | len(user.username) < 1:
+            return False
+        if len(user.last_name) > 30 | len(user.username) < 1:
+            return False
         return True

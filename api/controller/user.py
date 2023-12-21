@@ -13,34 +13,38 @@ service = UserService()
 
 @user_blueprint.route("/", methods=["POST"])
 def create_user():
-    req_data = request.get_json()
-    if all(
-        key in req_data for key in ("username", "first_name", "last_name", "password")
-    ):
-        user = User(
-            None,
-            req_data["username"],
-            req_data["first_name"],
-            req_data["last_name"],
-            req_data["password"],
-            None,
-        )
-    else:
-        return (
-            jsonify({"message": "Arguments are not valid.", "error": "Bad Request"}),
-            400,
-        )
+    try:
+        req_data = request.get_json()
+        if all(
+            key in req_data
+            for key in ("username", "first_name", "last_name", "password")
+        ):
+            user = User(
+                None,
+                req_data["username"],
+                req_data["first_name"],
+                req_data["last_name"],
+                req_data["password"],
+                None,
+            )
+    except ExServ.ServiceException as e:
+        raise ExCon.ControllerException(e.code)
+    except Exception:
+        raise ExCon.ControllerException(400)
 
     if not service.check_values(user):
-        return (
-            jsonify({"message": "The size of the fields entered is not respected"}),
-            400,
-        )
+        raise ExCon.ControllerException(400)
 
     if service.check_user(user.username):
-        return jsonify({"message": "The username you entered already exist"}), 403
+        raise ExCon.ControllerException(403)
 
-    service.create(user)
+    try:
+        service.create(user)
+    except ExServ.ServiceException as e:
+        raise ExCon.ControllerException(e.code)
+    except Exception:
+        raise ExCon.ControllerException(500)
+
     return jsonify({"message": "Success creating new user !"}), 200
 
 
@@ -58,12 +62,17 @@ def get_users():
 @user_blueprint.route("/<string:username>", methods=["GET"])
 def get_user(username):
     if not service.check_user(username):
-        return jsonify({"message": "The username you entered does not exist"}), 400
+        raise ExCon.ControllerException(404)
 
-    user = service.get(username)
+    try:
+        user = service.get(username)
 
-    if user:
-        return jsonify(user)
+        if user:
+            return jsonify(user)
+    except ExServ.ServiceException as e:
+        raise ExCon.ControllerException(e.code)
+    except Exception:
+        raise ExCon.ControllerException(500)
 
 
 @user_blueprint.route("/<string:username>", methods=["PATCH"])

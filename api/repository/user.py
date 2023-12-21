@@ -47,11 +47,11 @@ class UserRepo:
             conn.close()
 
             user = User(row[0], row[1], row[2], row[3], row[4], row[5])
-            if not user:
-                raise ExRepo.RepositoryException(404)
         except Exception:
             raise ExRepo.RepositoryException(500)
         else:
+            if not user:
+                raise ExRepo.RepositoryException(404)
             return user
 
     def view_all(self) -> list[User]:
@@ -65,10 +65,10 @@ class UserRepo:
             users = [
                 User(row[0], row[1], row[2], row[3], row[4], row[5]) for row in rows
             ]
-            if not users:
-                raise ExRepo.RepositoryException(404)
         except Exception:
             raise ExRepo.RepositoryException(500)
+        if not users:
+            raise ExRepo.RepositoryException(204)
         return users
 
     def update(self, user: User) -> None:
@@ -117,17 +117,15 @@ class UserRepo:
         try:
             conn = sqlite3.connect("database/rest_pas_trop.db")
             cur = conn.cursor()
-            query = "SELECT id WHERE username=?"
+            query = "SELECT id FROM user WHERE username=?"
             cur.execute(query, (username,))
             conn.commit()
             row = cur.fetchone()
             conn.close()
-            if row:
-                return row[0]
-            if not row:
-                raise ExRepo.RepositoryException(404)
         except Exception:
             raise ExRepo.RepositoryException(500)
+        if row:
+            return row[0]
         return None
 
     def get_password(self, username: str) -> str:
@@ -139,12 +137,12 @@ class UserRepo:
             conn.commit()
             row = cur.fetchone()
             conn.close()
-            if row:
-                return row[0]
-            if not row:
-                raise ExRepo.RepositoryException(404)
         except Exception:
             raise ExRepo.RepositoryException(500)
+        if row:
+            return row[0]
+        if not row:
+            raise ExRepo.RepositoryException(404)
 
     def get_role(self, username: str) -> str:
         try:
@@ -155,9 +153,9 @@ class UserRepo:
             conn.commit()
             row = cur.fetchone()
             conn.close()
-            if row:
-                return row[0]
-            if not row:
-                raise ExRepo.RepositoryException(404)
         except Exception:
             raise ExRepo.RepositoryException(500)
+        if row:
+            return row[0]
+        if not row:
+            raise ExRepo.RepositoryException(404)
