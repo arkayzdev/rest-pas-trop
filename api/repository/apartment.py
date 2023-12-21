@@ -33,8 +33,12 @@ class ApartmentRepo:
         query = "SELECT * from apartment WHERE id_apartment=?"
         cur.execute(query, (id_apartment,))
         row = cur.fetchone()
-        apartment =  Apartment(row[0], row[1], row[2], row[3], True if row[4] == 1 else False, row[5])
-        return apartment
+        conn.close()
+        if row:
+            apartment =  Apartment(row[0], row[1], row[2], row[3], True if row[4] == 1 else False, row[5])
+            return apartment
+        else:
+            return None
 
 
     def view_by_username(self, username: str) -> list[Apartment]:
@@ -93,4 +97,6 @@ class ApartmentRepo:
         cur.execute(query)
         conn.commit()
         conn.close()
+
+    
 

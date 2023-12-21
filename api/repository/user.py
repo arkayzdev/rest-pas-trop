@@ -33,9 +33,11 @@ class UserRepo:
         cur.execute(query, (username,))
         row = cur.fetchone()
         conn.close()
-        user = User(row[0], row[1], row[2], row[3], row[4], row[5])
-      
-        return user
+        if row:
+            user = User(row[0], row[1], row[2], row[3], row[4], row[5])
+            return user
+        else:
+            return None
 
 
     def view_all(self) -> list[User]:
@@ -45,10 +47,13 @@ class UserRepo:
         cur.execute(query)
         rows = cur.fetchall()
         conn.close()
-        users = [
-            User(row[0], row[1], row[2], row[3], row[4], row[5]) for row in rows
-        ]
-        return users
+        if rows:
+            users = [
+                User(row[0], row[1], row[2], row[3], row[4], row[5]) for row in rows
+            ]
+            return users
+        else:
+            return None
     
 
     def update(self, user: User) -> None: 

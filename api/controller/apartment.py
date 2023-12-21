@@ -51,26 +51,10 @@ def get_apartments():
 def get_apartment_id(apartment_id: int):
     apartment = service.get(apartment_id)
     if apartment:
-        req_data = request.get_json()
-        apartment_list_id = Apartment(None, req_data['username'], req_data['area'], req_data['max_people'], req_data['address'], req_data['availability'], None)
-        service.get_all(apartment_list_id)
-        return jsonify({'apartments': apartment_list_id})
+        return jsonify(apartment)
     else:
         return jsonify({'message': 'Apartment not found'}), 404
 
-
-@apartment_blueprint.route('/<string:username>', methods=['GET'])
-def get_apartment_username():
-    req_args = request.view_args
-    if 'username' in req_args: 
-        username =  req_args['username']
-    else:
-        return jsonify({'message': 'Missing required request argument'}), 400
-
-    if not user_service.get_by_username(username):
-        return jsonify({'message': 'The username you entered does not exist'}), 400
-    else:
-        return jsonify({'message': f'The desired user is: {username}'}), 200
 
 
 @apartment_blueprint.route('/<int:apartment_id>', methods=['PATCH'])
