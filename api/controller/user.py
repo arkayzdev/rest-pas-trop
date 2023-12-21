@@ -32,15 +32,9 @@ def get_users():
     try:
         jsonify(service.get_all())
     except ExServ.ServiceException as e:
-        raise ExCon.ControllerException(
-            e.message,
-            e.code,
-        )
+        raise ExCon.ControllerException(e.code)
     except Exception:
-        raise ExCon.ControllerException(
-            "A general controller error occurred.",
-            500,
-        )
+        raise ExCon.ControllerException(500)
     return jsonify(service.get_all())
 
 

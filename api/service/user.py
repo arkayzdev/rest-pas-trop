@@ -14,14 +14,26 @@ class UserService:
         self.apartment_service = ApartmentService()
 
     def create(self, user: User) -> None:
-        self.user_repo.insert(user)
+        try:
+            self.user_repo.insert(user)
+        except ExRepo.RepositoryException as e:
+            raise ExServ.ServiceException(e.code)
+        except Exception:
+            raise ExServ.ServiceException(500)
 
     def get(self, username: str) -> dict:
-        user = self.user_repo.view(username)
-        user_json = user.user_to_json()
-        user_json["apartment"] = self.apartment_service.get_by_username(username)
-        user_json["reservation"] = self.reservation_service.get_by_username(username)
-        return user_json
+        try:
+            user = self.user_repo.view(username)
+            user_json = user.user_to_json()
+            user_json["apartment"] = self.apartment_service.get_by_username(username)
+            user_json["reservation"] = self.reservation_service.get_by_username(
+                username
+            )
+            return user_json
+        except ExRepo.RepositoryException as e:
+            raise ExServ.ServiceException(e.code)
+        except Exception:
+            raise ExServ.ServiceException(500)
 
     def get_all(self) -> list[dict]:
         try:
@@ -35,27 +47,41 @@ class UserService:
                     user_json["username"]
                 )
         except ExRepo.RepositoryException as e:
-            raise ExServ.ServiceException(
-                e.message,
-                e.code,
-            )
+            raise ExServ.ServiceException(e.code)
         except Exception:
-            raise ExServ.ServiceException(
-                "A general service error occurred.",
-                500,
-            )
+            raise ExServ.ServiceException(500)
         return users_json
 
     def update(self, user: User) -> None:
-        self.user_repo.update(user)
+        try:
+            self.user_repo.update(user)
+        except ExRepo.RepositoryException as e:
+            raise ExServ.ServiceException(e.code)
+        except Exception:
+            raise ExServ.ServiceException(500)
 
     def delete(self, user: User) -> None:
-        self.user_repo.delete(user)
+        try:
+            self.user_repo.delete(user)
+        except ExRepo.RepositoryException as e:
+            raise ExServ.ServiceException(e.code)
+        except Exception:
+            raise ExServ.ServiceException(500)
 
     def delete_all(self) -> None:
-        self.user_repo.delete_all()
+        try:
+            self.user_repo.delete_all()
+        except ExRepo.RepositoryException as e:
+            raise ExServ.ServiceException(e.code)
+        except Exception:
+            raise ExServ.ServiceException(500)
 
     def check_user(self, username: str) -> bool:
-        if self.user_repo.get_id(username):
-            return True
-        return False
+        try:
+            if self.user_repo.get_id(username):
+                return True
+            return False
+        except ExRepo.RepositoryException as e:
+            raise ExServ.ServiceException(e.code)
+        except Exception:
+            raise ExServ.ServiceException(500)
