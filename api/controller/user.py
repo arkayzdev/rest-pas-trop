@@ -52,6 +52,9 @@ def update_user(username: str):
     else:
         return jsonify({'message' : 'Arguments are not valid.', 'error': 'Bad Request'}), 400
     
+    if not service.check_values(user):
+        return jsonify({'message': 'The size of the fields entered is not respected'}), 400
+    
     if not service.check_user(user):
             return jsonify({'message': 'This username does not exist'}), 400
 
