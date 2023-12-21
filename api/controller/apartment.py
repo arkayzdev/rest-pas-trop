@@ -1,11 +1,13 @@
 from flask import Blueprint, request, jsonify
 from service.apartment import ApartmentService
 from service.authentification import AuthentificationService
+from service.user import UserService
 from model.apartment import Apartment
 
 
 apartment_blueprint = Blueprint('apartment', __name__)
 
+user_service = UserService()
 service = ApartmentService()
 auth = AuthentificationService()
 
@@ -19,16 +21,23 @@ def create_apartment():
     if username == "" or password == "":
         return jsonify({'message': 'Invalid credentials format'}), 401
 
-    if not auth.authenticate_user(username, password):
+    if not auth.authenticate_admin(username, password):
         return jsonify({'message': 'Invalid username or password'}), 401
     
     req_data = request.get_json()
-    apartment = Apartment(None, req_data['username'], req_data['area'], req_data['max_people'], req_data['address'], req_data['availability'], None)  
+    if all(key in req_data for key in ("username", "area", "max_people", "address", "availability")):
+        apartment = Apartment(None, req_data['username'], req_data['area'], req_data['max_people'], req_data['address'], req_data['availability'], None)
+    else:
+        return jsonify({'message' : 'Arguments are not valid.', 'error': 'Bad Request'}), 400 
+    
     if not service.check_values(apartment):
         return jsonify({'message': 'The type of fields entered is not respected'}), 400
-    print(service.create(apartment))
+
+
+
+    service.create(apartment)
     return jsonify({'message': 'Success creating new apartment !'}), 200
-    # return jsonify({'message': 'Error !'}), 404
+  
 
 
 

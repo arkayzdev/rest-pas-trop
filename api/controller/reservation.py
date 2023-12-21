@@ -1,10 +1,12 @@
 from flask import Blueprint, request, jsonify
 from service.reservation import ReservationService
 from service.authentification import AuthentificationService
+from service.user import UserService
 from model.reservation import Reservation
 
 reservation_blueprint = Blueprint('reservation', __name__)
 
+user_service = UserService()
 service = ReservationService()
 auth = AuthentificationService()
 
@@ -22,9 +24,14 @@ def create_reservation():
         return jsonify({'message': 'Invalid username or password'}), 401
 
     req_data = request.get_json()
-    reservation = Reservation(None, req_data['start_date'], req_data['end_date'], req_data['price'], req_data['username'], None)    
+    reservation = Reservation(None, req_data['start_date'], req_data['end_date'], req_data['price'], req_data['username'], None) 
+
     if not service.check_values(reservation):
         return jsonify({'message': 'The type of fields entered is not respected'}), 400    
+
+    if not user_service.check_user(reservation.username):
+        return jsonify({'message': 'User not found'}), 404
+
     service.create(reservation)
     return jsonify({'message': 'Success creating new reservation!'}), 200
     # return jsonify({'message': 'Error !'}), 404

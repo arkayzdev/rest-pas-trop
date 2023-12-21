@@ -29,11 +29,11 @@ class ReservationService:
     def delete_all(self) -> None:
         self.reservation_repo.delete_all()
 
-    def check_values(self, start_date: str, end_date: str, price: int) -> bool:
-        if not isinstance(start_date, str):
+    def check_values(self, reservation: Reservation) -> bool:
+        if not isinstance(reservation.start_date, str):
             return False
-        if not isinstance(end_date, str):
+        if not isinstance(reservation.end_date, str):
             return False
-        if not isinstance(price, int):
+        if not isinstance(reservation.price, int):
             return False
         return True
