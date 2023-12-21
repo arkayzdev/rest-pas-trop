@@ -12,10 +12,20 @@ class ReservationService:
         self.apartment_service = ApartmentService()
 
     def create(self, reservation: Reservation) -> None:
-        self.reservation_repo.insert(reservation)
+        try:
+            self.reservation_repo.insert(reservation)
+        except ExRepo.RepositoryException as e:
+            raise ExServ.ServiceException(e.code)
+        except Exception:
+            raise ExServ.ServiceException(500)
 
     def get(self, id_reservation: int) -> Reservation:
-        reservation = self.reservation_repo.view(id_reservation)
+        try:
+            reservation = self.reservation_repo.view(id_reservation)
+        except ExRepo.RepositoryException as e:
+            raise ExServ.ServiceException(e.code)
+        except Exception:
+            raise ExServ.ServiceException(500)
         if reservation:
             reservation_json = reservation.reservation_to_json()
             reservation_json['apartment'] = self.apartment_service.get_for_reservation(reservation.id_apartment)
@@ -23,23 +33,48 @@ class ReservationService:
         return None
      
     def get_all(self) -> list[Reservation]:
-        reservations = self.reservation_repo.view_all()
+        try:
+            reservations = self.reservation_repo.view_all()
+        except ExRepo.RepositoryException as e:
+            raise ExServ.ServiceException(e.code)
+        except Exception:
+            raise ExServ.ServiceException(500)
         return [reservation.reservation_to_json() for reservation in reservations]
 
     def get_by_username(self, username: str) -> list[Reservation]:
-        reservations = self.reservation_repo.view_by_username(username)
+        try:
+            reservations = self.reservation_repo.view_by_username(username)
+        except ExRepo.RepositoryException as e:
+            raise ExServ.ServiceException(e.code)
+        except Exception:
+            raise ExServ.ServiceException(500)
         if reservations:
             return [reservation.json_fmt() for reservation in reservations]
         return None
 
     def update(self, reservation: Reservation):
-        self.reservation_repo.update(reservation)
+        try:
+            self.reservation_repo.update(reservation)
+        except ExRepo.RepositoryException as e:
+            raise ExServ.ServiceException(e.code)
+        except Exception:
+            raise ExServ.ServiceException(500)
 
     def delete(self, reservation: Reservation) -> None:
-        self.reservation_repo.delete(reservation)
+        try:
+            self.reservation_repo.delete(reservation)
+        except ExRepo.RepositoryException as e:
+            raise ExServ.ServiceException(e.code)
+        except Exception:
+            raise ExServ.ServiceException(500)
 
     def delete_all(self) -> None:
-        self.reservation_repo.delete_all()
+        try:
+            self.reservation_repo.delete_all()
+        except ExRepo.RepositoryException as e:
+            raise ExServ.ServiceException(e.code)
+        except Exception:
+            raise ExServ.ServiceException(500)
 
     def check_values(self, reservation: Reservation) -> bool:
         if not isinstance(reservation.start_date, str):

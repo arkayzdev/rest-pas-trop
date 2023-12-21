@@ -128,10 +128,10 @@ def delete_user(username: str):
     if admin_username == "" or admin_password == "":
         raise ExCon.ControllerException(401)
     
-    if auth.check_admin(admin_username) == True:
-        raise ExCon.ControllerException(401)
+    # if auth.check_admin(admin_username) == True:
+    #     raise ExCon.ControllerException(401)
 
-    if auth.authenticate_admin(admin_username, admin_password):
+    if not auth.authenticate_admin(admin_username, admin_password):
         raise ExCon.ControllerException(401)
     ########
     user = service.check_user(username)

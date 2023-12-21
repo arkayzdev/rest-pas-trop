@@ -108,5 +108,10 @@ def delete_apartment(apartment_id: int):
 
 @apartment_blueprint.route("/", methods=["DELETE"])
 def delete_apartments():
-    service.delete_all()
+    try:
+        service.delete_all()
+    except ExServ.ServiceException as e:
+        raise ExCon.ControllerException(e.code)
+    except Exception:
+        raise ExCon.ControllerException(400)
     return jsonify({"message": "All apartments deleted successfully"}), 200
