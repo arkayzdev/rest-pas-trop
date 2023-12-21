@@ -68,6 +68,10 @@ class ReservationService:
         except Exception:
             raise ExServ.ServiceException(500)
 
+    def delete_by_username(self, username: str):
+        self.reservation_repo.delete_by_username(username)
+
+
     def delete_all(self) -> None:
         try:
             self.reservation_repo.delete_all()

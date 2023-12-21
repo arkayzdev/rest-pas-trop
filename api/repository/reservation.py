@@ -127,3 +127,14 @@ class ReservationRepo:
             conn.close()
         except Exception:
             raise ExRepo.RepositoryException(500)
+
+    def delete_by_username(self, username) -> None:
+         try:
+            conn = sqlite3.connect("database/rest_pas_trop.db")
+            cur = conn.cursor()
+            query = "DELETE FROM reservation WHERE username=?"
+            cur.execute(query,(username, ))
+            conn.commit()
+            conn.close()
+        except Exception:
+            raise ExRepo.RepositoryException(500)

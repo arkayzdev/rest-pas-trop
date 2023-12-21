@@ -109,7 +109,7 @@ def delete_reservation(reservation_id: int):
     except Exception:
         raise ExCon.ControllerException(400)
     if reservation:
-        service.delete(reservation)
+        service.delete(reservation_id)
         return (
             jsonify({"message": f"Successfully deleted reservation: {reservation_id}"}),
             200,

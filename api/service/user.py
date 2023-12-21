@@ -71,6 +71,8 @@ class UserService:
 
     def delete(self, user: User) -> None:
         try:
+            self.reservation_service.delete_by_username(user.username)
+            self.apartment_service.delete_by_username(user.username)
             self.user_repo.delete(user)
         except ExRepo.RepositoryException as e:
             raise ExServ.ServiceException(e.code)

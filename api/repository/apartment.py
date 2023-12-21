@@ -139,3 +139,15 @@ class ApartmentRepo:
             conn.close()
         except Exception:
             raise ExRepo.RepositoryException(500)
+
+
+    def delete_by_username(self, username: str) -> None:
+        try:
+            conn = sqlite3.connect("database/rest_pas_trop.db")
+            cur = conn.cursor()
+            query = "DELETE FROM apartment WHERE username=?"
+            cur.execute(query, (username,))
+            conn.commit()
+            conn.close()
+        except Exception:
+            raise ExRepo.RepositoryException(500)

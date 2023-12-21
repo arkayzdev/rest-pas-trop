@@ -17,6 +17,18 @@ auth = AuthentificationService()
 
 @apartment_blueprint.route("/", methods=["POST"])
 def create_apartment():
+    authorization_header = request.headers.get('Authorization')
+    
+    if not authorization_header or not authorization_header.startswith('Basic '):
+        raise ExCon.ControllerException(401)
+    admin_username, admin_password = auth.extract_credentials(authorization_header)
+
+    if admin_username == "" or admin_password == "":
+        raise ExCon.ControllerException(401)
+
+    if not auth.authenticate_admin(admin_username, admin_password):
+        raise ExCon.ControllerException(401)
+    
     try:
         req_data = request.get_json()
         all(
@@ -61,7 +73,7 @@ def get_apartments():
 
 
 @apartment_blueprint.route("/<int:apartment_id>", methods=["GET"])
-def get_apartment_id(apartment_id: int):
+def get_apartment(apartment_id: int):
     try: 
         apartment = service.get(apartment_id)
     except ExServ.ServiceException as e:
@@ -76,6 +88,16 @@ def get_apartment_id(apartment_id: int):
 
 @apartment_blueprint.route("/<int:apartment_id>", methods=["PATCH"])
 def update_apartment(apartment_id: int):
+    authorization_header = request.headers.get('Authorization')
+    if not authorization_header or not authorization_header.startswith('Basic '):
+        raise ExCon.ControllerException(401)
+    admin_username, admin_password = auth.extract_credentials(authorization_header)
+
+    if admin_username == "" or admin_password == "":
+        raise ExCon.ControllerException(401)
+
+    if not auth.authenticate_admin(admin_username, admin_password):
+        raise ExCon.ControllerException(401)
     try:
         req_data = request.get_json()
         all(key in req_data for key in ("username", "area", "max_people", "address", "availability"))
@@ -99,6 +121,16 @@ def update_apartment(apartment_id: int):
 
 @apartment_blueprint.route("/<int:apartment_id>", methods=["DELETE"])
 def delete_apartment(apartment_id: int):
+    authorization_header = request.headers.get('Authorization')
+    if not authorization_header or not authorization_header.startswith('Basic '):
+        raise ExCon.ControllerException(401)
+    admin_username, admin_password = auth.extract_credentials(authorization_header)
+
+    if admin_username == "" or admin_password == "":
+        raise ExCon.ControllerException(401)
+
+    if not auth.authenticate_admin(admin_username, admin_password):
+        raise ExCon.ControllerException(401)
     if not service.get(apartment_id):
         raise ExCon.ControllerException(404)    
 
@@ -108,10 +140,22 @@ def delete_apartment(apartment_id: int):
 
 @apartment_blueprint.route("/", methods=["DELETE"])
 def delete_apartments():
+    authorization_header = request.headers.get('Authorization')
+    if not authorization_header or not authorization_header.startswith('Basic '):
+        raise ExCon.ControllerException(401)
+    admin_username, admin_password = auth.extract_credentials(authorization_header)
+
+    if admin_username == "" or admin_password == "":
+        raise ExCon.ControllerException(401)
+
+    if not auth.authenticate_admin(admin_username, admin_password):
+        raise ExCon.ControllerException(401)
     try:
         service.delete_all()
     except ExServ.ServiceException as e:
         raise ExCon.ControllerException(e.code)
     except Exception:
         raise ExCon.ControllerException(400)
+    service.delete_all()
+
     return jsonify({"message": "All apartments deleted successfully"}), 200

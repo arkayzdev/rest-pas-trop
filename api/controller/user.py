@@ -64,7 +64,6 @@ def get_user(username):
 
     try:
         user = service.get(username)
-
         if user:
             return jsonify(user)
     except ExServ.ServiceException as e:
@@ -84,7 +83,7 @@ def update_user(username: str):
     if admin_username == "" or admin_password == "":
         raise ExCon.ControllerException(401)
 
-    if auth.authenticate_admin(admin_username, admin_password):
+    if not auth.authenticate_user(admin_username, admin_password):
         raise ExCon.ControllerException(401)
     ########
 
@@ -128,11 +127,12 @@ def delete_user(username: str):
     if admin_username == "" or admin_password == "":
         raise ExCon.ControllerException(401)
 
-    if auth.check_admin(admin_username):
+    if auth.check_admin(username):
         raise ExCon.ControllerException(401)
 
     if not auth.authenticate_admin(admin_username, admin_password):
-        raise ExCon.ControllerException(401)
+        if not auth.authenticate_user(admin_username, admin_password):
+            raise ExCon.ControllerException(401)
     ########
     user = service.check_user(username)
     if user:
