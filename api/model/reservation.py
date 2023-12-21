@@ -4,12 +4,13 @@ import os
 load_dotenv()
 
 class Reservation:
-    def __init__(self, id_reservation: int, start_date: datetime, end_date: datetime, price: int, username: str) -> None:
+    def __init__(self, id_reservation: int, start_date: datetime, end_date: datetime, price: int, username: str, id_apartment: str) -> None:
         self.id_reservation = id_reservation
         self.start_date = start_date
         self.end_date = end_date
         self.price = price
         self.username = username
+        self.id_apartment = id_apartment
     
     
     def reservation_to_json(self):

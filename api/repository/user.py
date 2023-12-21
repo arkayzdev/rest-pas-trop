@@ -128,6 +128,7 @@ class UserRepo:
                 raise ExRepo.RepositoryException(404)
         except Exception:
             raise ExRepo.RepositoryException(500)
+        return None
 
     def get_password(self, username: str) -> str:
         try:

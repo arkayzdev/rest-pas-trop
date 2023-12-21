@@ -29,10 +29,10 @@ class ApartmentService:
     def delete_all(self) -> None:
         self.apartment_repo.delete_all()
 
-    def check_values(self, area: int, max_people: int) -> bool:
-        if not isinstance(area, int):
+    def check_values(self, apartment: Apartment) -> bool:
+        if not isinstance(apartment.area, int):
             return False
-        if not isinstance(max_people, int):
+        if not isinstance(apartment.max_people, int):
             return False
         return True
     

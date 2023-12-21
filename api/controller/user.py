@@ -85,16 +85,25 @@ def update_user(username: str):
             jsonify({"message": "Arguments are not valid.", "error": "Bad Request"}),
             400,
         )
-    user.username = username
-    service.update(user)
+
+    if not service.check_values(user):
+        return (
+            jsonify({"message": "The size of the fields entered is not respected"}),
+            400,
+        )
+
+    if not service.check_user(username):
+        return jsonify({"message": "This username does not exist"}), 400
+
+    service.update(user, username)
     return jsonify({"message": f"Successfully updated user: {username}"}), 200
 
 
 @user_blueprint.route("/<string:username>", methods=["DELETE"])
 def delete_user(username: str):
-    user = service.get(username)
+    user = service.check_user(username)
     if user:
-        service.delete(user)
+        service.delete(username)
         return jsonify({"message": f"Successfully deleted user: {username}"}), 200
     else:
         return jsonify({"message": "User not found"}), 404

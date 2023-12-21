@@ -52,6 +52,9 @@ class UserService:
             raise ExServ.ServiceException(500)
         return users_json
 
+    def get_id(self, username: str):
+        return self.user_repo.get_id(username)
+
     def update(self, user: User) -> None:
         try:
             self.user_repo.update(user)
