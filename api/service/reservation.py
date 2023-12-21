@@ -1,16 +1,20 @@
 from repository.reservation import ReservationRepo
 from model.reservation import Reservation
 
+import exception.repository as ExRepo
+import exception.service as ExServ
+
+
 class ReservationService:
     def __init__(self) -> None:
         self.reservation_repo = ReservationRepo()
 
     def create(self, reservation: Reservation) -> None:
-        self.reservation_repo.insert(reservation)    
+        self.reservation_repo.insert(reservation)
 
     def get(self, id_reservation: int) -> Reservation:
         return self.reservation_repo.view(id_reservation)
-    
+
     def get_all(self) -> list[Reservation]:
         return self.reservation_repo.view_all()
 
