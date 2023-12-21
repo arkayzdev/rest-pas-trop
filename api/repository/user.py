@@ -63,7 +63,6 @@ class UserRepo:
             users = [
                 User(row[0], row[1], row[2], row[3], row[4], row[5]) for row in rows
             ]
-
         except Exception:
             raise ExRepo.RepositoryException(500)
         if not users:
@@ -74,7 +73,7 @@ class UserRepo:
         try:
             conn = sqlite3.connect("database/rest_pas_trop.db")
             cur = conn.cursor()
-            query = "UPDATE user SET username=? first_name=?, last_name=?, password=?, role=? WHERE username=?"
+            query = "UPDATE user SET username=?, first_name=?, last_name=?, password=? WHERE id=?"
             cur.execute(
                 query,
                 (
@@ -82,7 +81,7 @@ class UserRepo:
                     user.first_name,
                     user.last_name,
                     hash_password(user.password),
-                    user.role,
+                    user.id
                 ),
             )
             conn.commit()

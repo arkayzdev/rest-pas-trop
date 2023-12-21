@@ -60,8 +60,9 @@ class UserService:
         except Exception:
             raise ExServ.ServiceException(500)
 
-    def update(self, user: User) -> None:
+    def update(self, user: User, username: str) -> None:
         try:
+            user.id = self.get_id(username)
             self.user_repo.update(user)
         except ExRepo.RepositoryException as e:
             raise ExServ.ServiceException(e.code)

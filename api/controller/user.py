@@ -94,7 +94,7 @@ def update_user(username: str):
     except ExServ.ServiceException as e:
         raise ExCon.ControllerException(e.code)
     except Exception:
-        raise ExCon.ControllerException(400)
+        raise ExCon.ControllerException(500)
 
     if not service.check_values(user):
         raise ExCon.ControllerException(400)
