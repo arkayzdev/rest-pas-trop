@@ -38,7 +38,7 @@ def create_apartment():
 
     if not service.check_values(apartment):
         raise ExCon.ControllerException(400)
-    if not user_service.check_user(apartment.username):
+    if user_service.check_user(apartment.username):
         raise ExCon.ControllerException(400)
     
     try:
@@ -78,8 +78,8 @@ def get_apartment_id(apartment_id: int):
 def update_apartment(apartment_id: int):
     try:
         req_data = request.get_json()
-        if all(key in req_data for key in ("username", "area", "max_people", "address", "availability")):
-            apartment = Apartment(apartment_id, req_data['area'], req_data['max_people'], req_data['address'], bool(req_data['availability']), req_data['username'])
+        all(key in req_data for key in ("username", "area", "max_people", "address", "availability"))
+        apartment = Apartment(apartment_id, req_data['area'], req_data['max_people'], req_data['address'], bool(req_data['availability']), req_data['username'])
     except ExServ.ServiceException as e:
         raise ExCon.ControllerException(e.code)
     except Exception:
@@ -90,7 +90,7 @@ def update_apartment(apartment_id: int):
     if not service.get(apartment_id):
         raise ExCon.ControllerException(404)    
     
-    if not user_service.check_user(apartment.username):
+    if user_service.check_user(apartment.username):
         raise ExCon.ControllerException(400)    
 
     service.update(apartment)
