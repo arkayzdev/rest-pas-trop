@@ -144,13 +144,14 @@ def delete_apartments():
     if not authorization_header or not authorization_header.startswith('Basic '):
         raise ExCon.ControllerException(401)
     admin_username, admin_password = auth.extract_credentials(authorization_header)
-
+    print('a')
     if admin_username == "" or admin_password == "":
         raise ExCon.ControllerException(401)
-
+    print('b')
     if not auth.authenticate_admin(admin_username, admin_password):
         raise ExCon.ControllerException(401)
     try:
+        print('c')
         service.delete_all()
     except ExServ.ServiceException as e:
         raise ExCon.ControllerException(e.code)

@@ -70,21 +70,20 @@ class ReservationRepo:
         return None
 
     def view_by_apartment(self, id_apartment):
-        try:
-            conn = sqlite3.connect("database/rest_pas_trop.db")
-            cur = conn.cursor()
-            query = "SELECT * from reservation WHERE id_apartment=?"
-            cur.execute(query, (username,))
-            rows = cur.fetchall()
-            conn.close()
-            if rows:
-                reservations = [
-                    Reservation(row[0], row[1], row[2], row[3], row[4], row[5]) for row in rows
-                ]
-                return reservations
-        except Exception:
-            raise ExRepo.RepositoryException(500)
+        conn = sqlite3.connect("database/rest_pas_trop.db")
+        cur = conn.cursor()
+        query = "SELECT * from reservation WHERE id_apartment=?"
+        cur.execute(query, (id_apartment,))
+        rows = cur.fetchall()
+        conn.close()
+        if rows:
+            reservations = [
+                Reservation(row[0], row[1], row[2], row[3], row[4], row[5]) for row in rows
+            ]
+            return [reservation.json_fmt() for reservation in reservations]
         return None
+        
+        
 
     def view_all(self) -> list[Reservation]:
         try:
@@ -146,7 +145,7 @@ class ReservationRepo:
             raise ExRepo.RepositoryException(500)
 
     def delete_by_username(self, username) -> None:
-         try:
+        try:
             conn = sqlite3.connect("database/rest_pas_trop.db")
             cur = conn.cursor()
             query = "DELETE FROM reservation WHERE username=?"
