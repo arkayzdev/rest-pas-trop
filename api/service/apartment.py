@@ -4,7 +4,6 @@ from repository.reservation import ReservationRepo
 from repository.user import UserRepo
 import exception.repository as ExRepo
 import exception.service as ExServ
-import pprint
 
 class ApartmentService:
     def __init__(self) -> None:
@@ -66,11 +65,8 @@ class ApartmentService:
         apartments_json = []
         for apartment in apartments:
             apartment_json = apartment.apartment_to_json()
-            # apartment_json['reservation'] = self.reservation_repo.view_by_apartment(apartment.id_apartment)
-            # print(apartment_json['reservation'])
-            print(apartment.username)
-            # apartment_json['user'] = self.user_repo.view(apartment.username).json_fmt()
-            # print(apartment_json['username'])
+            apartment_json['reservation'] = self.reservation_repo.view_by_apartment(apartment.id_apartment)
+            apartment_json['user'] = self.user_repo.view(apartment.username).json_fmt()
             apartments_json.append(apartment_json)
         return apartments_json
 
@@ -104,7 +100,8 @@ class ApartmentService:
             self.apartment_repo.delete_all()
         except ExRepo.RepositoryException as e:
             raise ExServ.ServiceException(e.code)
-        except Exception:
+        except Exception as e:
+            print(e)
             raise ExServ.ServiceException(500)
 
     def check_values(self, apartment: Apartment) -> bool:

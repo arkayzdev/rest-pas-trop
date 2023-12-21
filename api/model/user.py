@@ -21,8 +21,6 @@ class User:
 
     def json_fmt(self):
         return {
-            'user': {
-                'username' : self.username,
-                'url': f'{os.getenv("hostname")}user/{self.username}'
-            }
+            'username' : self.username,
+            'url': f'{os.getenv("hostname")}user/{self.username}'
         }

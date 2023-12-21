@@ -130,7 +130,7 @@ class ApartmentRepo:
         except Exception:
             raise ExRepo.RepositoryException(500)
 
-    def delete_all() -> None:
+    def delete_all(self) -> None:
         try:
             conn = sqlite3.connect("database/rest_pas_trop.db")
             cur = conn.cursor()

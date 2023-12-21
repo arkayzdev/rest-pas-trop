@@ -17,16 +17,16 @@ auth = AuthentificationService()
 @reservation_blueprint.route("/", methods=["POST"])
 def create_reservation():
     try:
-    # authorization_header = request.headers.get("Authorization")
-    # if not authorization_header or not authorization_header.startswith("Basic "):
-    #     return jsonify({"message": "Authorization header missing or invalid"}), 401
-    # username, password = auth.extract_credentials(authorization_header)
+        authorization_header = request.headers.get("Authorization")
+        if not authorization_header or not authorization_header.startswith("Basic "):
+            return jsonify({"message": "Authorization header missing or invalid"}), 401
+        username, password = auth.extract_credentials(authorization_header)
 
-    # if username == "" or password == "":
-    #     return jsonify({"message": "Invalid credentials format"}), 401
+        if username == "" or password == "":
+            return jsonify({"message": "Invalid credentials format"}), 401
 
-    # if not auth.authenticate_user(username, password):
-    #     return jsonify({"message": "Invalid username or password"}), 401
+        if not auth.authenticate_user(username, password):
+            return jsonify({"message": "Invalid username or password"}), 401
 
         req_data = request.get_json()
         reservation = Reservation(

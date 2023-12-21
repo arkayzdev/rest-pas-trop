@@ -11,9 +11,7 @@ class AuthentificationService:
     def check_password(self, username: str, password: str) -> bool:
         user_password = self.user_repo.get_password(username)
         if verify_hash(password, user_password):
-            print("True")
             return True
-        print("False")
         return False
         
 
