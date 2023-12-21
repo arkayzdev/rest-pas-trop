@@ -60,19 +60,31 @@ def get_apartment_id(apartment_id: int):
 @apartment_blueprint.route('/<int:apartment_id>', methods=['PATCH'])
 def update_apartment(apartment_id: int):
     req_data = request.get_json()
-    apartment = Apartment(None, req_data['username'], req_data['area'], req_data['max_people'], req_data['address'], req_data['availability'], None)
+    if all(key in req_data for key in ("username", "area", "max_people", "address", "availability")):
+        apartment = Apartment(apartment_id, req_data['area'], req_data['max_people'], req_data['address'], bool(req_data['availability']), req_data['username'])
+    else:
+        return jsonify({'message' : 'Arguments are not valid.', 'error': 'Bad Request'}), 400 
+    
+    if not service.check_values(apartment):
+        return jsonify({'message': 'The type of fields entered is not respected'}), 400
+    
+    if not service.get(apartment_id):
+       return jsonify({'message': 'Apartment not found'}), 404
+    
+    if not user_service.check_user(apartment.username):
+        return jsonify({'message': 'The username you entered does not exist'}), 400
+
     service.update(apartment)
     return jsonify({'message': f'Successfully updated apartment: {apartment_id}'}), 200
 
 
 @apartment_blueprint.route('/<int:apartment_id>', methods=['DELETE'])
 def delete_apartment(apartment_id: int):
-    apartment = service.get(apartment_id)
-    if apartment:
-        service.delete(apartment)
-        return jsonify({'message': f'Successfully deleted apartment: {apartment_id}'}), 200
-    else:
-        return jsonify({'message': 'Apartment not found'}), 404
+    if not service.get(apartment_id):
+       return jsonify({'message': 'Apartment not found'}), 404
+
+    service.delete(apartment_id)
+    return jsonify({'message': f'Successfully deleted apartment: {apartment_id}'}), 200
 
 
 @apartment_blueprint.route('/', methods=['DELETE'])

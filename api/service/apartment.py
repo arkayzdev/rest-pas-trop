@@ -10,7 +10,9 @@ class ApartmentService:
 
     def get(self, id_apartment: int) -> Apartment:
         apartment = self.apartment_repo.view(id_apartment)
-        return apartment.apartment_to_json()
+        if apartment:
+            return apartment.apartment_to_json()
+        return None
     
     def get_by_username(self, username: str) -> list[Apartment]:
         apartments = self.apartment_repo.view_by_username(username)
@@ -18,7 +20,12 @@ class ApartmentService:
             return [apartment.json_fmt() for apartment in apartments]
         return None
 
-    
+    def get_for_reservation(self, id_apartment: int) -> Apartment:
+        apartment = self.apartment_repo.view(id_apartment)
+        if apartment:
+            return apartment.json_fmt()
+        return None
+
     def get_all(self) -> list[Apartment]:
         apartments = self.apartment_repo.view_all()
         return [apartment.apartment_to_json() for apartment in apartments]

@@ -16,8 +16,12 @@ class ReservationService:
 
     def get(self, id_reservation: int) -> Reservation:
         reservation = self.reservation_repo.view(id_reservation)
-        # reservation['apartment'] = 
-    
+        if reservation:
+            reservation_json = reservation.reservation_to_json()
+            reservation_json['apartment'] = self.apartment_service.get_for_reservation(reservation.id_apartment)
+            return reservation_json
+        return None
+     
     def get_all(self) -> list[Reservation]:
         return self.reservation_repo.view_all()
 

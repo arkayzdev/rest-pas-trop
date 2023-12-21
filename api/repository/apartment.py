@@ -70,13 +70,13 @@ class ApartmentRepo:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
         query = "UPDATE apartment SET area=?, max_people=?, address=?, availability=?, username=? WHERE id_apartment=?"
-        cur.execute(query,
+        cur.execute(query,(
             apartment.area,
             apartment.max_people,
             apartment.address,
             apartment.availability,
             apartment.username,
-            apartment.id_apartment)
+            apartment.id_apartment))
         conn.commit()
         conn.close()
 
@@ -85,7 +85,7 @@ class ApartmentRepo:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
         query = "DELETE FROM apartment WHERE id_apartment=?"
-        cur.execute(query, (id,))
+        cur.execute(query, (id_apartment,))
         conn.commit()
         conn.close()
 
