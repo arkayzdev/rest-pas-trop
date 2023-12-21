@@ -12,14 +12,10 @@ class ApartmentService:
         return self.apartment_repo.view(id_apartment)
     
     def get_by_username(self, username: str) -> list[Apartment]:
-<<<<<<< HEAD
         apartments = self.apartment_repo.view_by_username(username)
         if apartments:
             return [apartment.apartment_to_json() for apartment in apartments]
         return None
-=======
-        return self.apartment_repo.view_by_username(username)
->>>>>>> feature/controller
     
     def get_all(self) -> list[Apartment]:
         return self.apartment_repo.view_all()
