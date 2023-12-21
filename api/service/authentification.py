@@ -1,6 +1,6 @@
 from repository.user import UserRepo
 from service.user import UserService
-import hashlib
+from functions.hash import verify_hash
 import base64
 
 class AuthentificationService:
@@ -8,11 +8,12 @@ class AuthentificationService:
         self.user_repo = UserRepo()
         self.user_service = UserService()
 
-
     def check_password(self, username: str, password: str) -> bool:
         user_password = self.user_repo.get_password(username)
-        if hashlib.sha512(password.encode('UTF-8')) == user_password:
+        if verify_hash(password, user_password):
+            print("True")
             return True
+        print("False")
         return False
         
 

@@ -7,9 +7,9 @@ import exception.controller as ExCon
 
 app = Flask(__name__)
 
-app.register_blueprint(user_blueprint, url_prefix="/user")
-app.register_blueprint(reservation_blueprint, url_prefix="/reservation")
-app.register_blueprint(apartment_blueprint, url_prefix="/apartment")
+app.register_blueprint(user_blueprint, url_prefix="/api/user")
+app.register_blueprint(reservation_blueprint, url_prefix="/api/reservation")
+app.register_blueprint(apartment_blueprint, url_prefix="/api/apartment")
 
 
 @app.errorhandler(ExCon.ControllerException)
