@@ -47,8 +47,7 @@ class UserRepo:
             conn.close()
             user = User(row[0], row[1], row[2], row[3], row[4], row[5])
         except Exception:
-            raise ExRepo.RepositoryException(500)
- 
+            raise ExRepo.RepositoryException(501)
 
     def view_all(self) -> list[User]:
         try:
@@ -67,7 +66,6 @@ class UserRepo:
         if not users:
             raise ExRepo.RepositoryException(204)
         return users
-
 
     def update(self, user: User) -> None:
         try:
@@ -89,7 +87,6 @@ class UserRepo:
         except Exception:
             raise ExRepo.RepositoryException(500)
 
-
     def delete(self, username: str) -> None:
         try:
             conn = sqlite3.connect("database/rest_pas_trop.db")
@@ -101,7 +98,6 @@ class UserRepo:
         except Exception:
             raise ExRepo.RepositoryException(500)
 
-
     def delete_all(self) -> None:
         try:
             conn = sqlite3.connect("database/rest_pas_trop.db")
@@ -112,7 +108,6 @@ class UserRepo:
             conn.close()
         except Exception:
             raise ExRepo.RepositoryException(500)
-
 
     def get_id(self, username: str) -> str:
         try:
@@ -129,7 +124,6 @@ class UserRepo:
             return row[0]
         return None
 
-
     def get_password(self, username: str) -> str:
         try:
             conn = sqlite3.connect("database/rest_pas_trop.db")
@@ -145,7 +139,6 @@ class UserRepo:
             return row[0]
         if not row:
             raise ExRepo.RepositoryException(404)
-
 
     def get_role(self, username: str) -> str:
         try:

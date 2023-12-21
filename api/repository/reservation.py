@@ -9,7 +9,7 @@ class ReservationRepo:
         try:
             conn = sqlite3.connect("database/rest_pas_trop.db")
             cur = conn.cursor()
-            query = "CREATE TABLE IF NOT EXISTS reservation (id_reservation INTEGER PRIMARY KEY AUTOINCREMENT, start_date TIMESTAMP, end_date TIMESTAMP, price INTEGER, username CHAR(60))"
+            query = "CREATE TABLE IF NOT EXISTS reservation (id_reservation INTEGER PRIMARY KEY AUTOINCREMENT, start_date TIMESTAMP, end_date TIMESTAMP, price INTEGER, username CHAR(60), id_apartment INTEGER)"
             cur.execute(query)
             conn.commit()
             conn.close()
@@ -20,7 +20,7 @@ class ReservationRepo:
         try:
             conn = sqlite3.connect("database/rest_pas_trop.db")
             cur = conn.cursor()
-            query = "INSERT INTO reservation (start_date, end_date, price, username) VALUES (?,?,?,?)"
+            query = "INSERT INTO reservation (start_date, end_date, price, username, id_apartment) VALUES (?,?,?,?,?)"
             cur.execute(
                 query,
                 (
@@ -28,6 +28,7 @@ class ReservationRepo:
                     reservation.end_date,
                     reservation.price,
                     reservation.username,
+                    reservation.id_apartment,
                 ),
             )
             conn.commit()
@@ -43,7 +44,7 @@ class ReservationRepo:
             cur.execute(query, (id_reservation,))
             row = cur.fetchone()
 
-            reservation = Reservation(row[0], row[1], row[2], row[3], row[4])
+            reservation = Reservation(row[0], row[1], row[2], row[3], row[4], row[5])
         except Exception:
             raise ExRepo.RepositoryException(500)
         else:
@@ -61,7 +62,8 @@ class ReservationRepo:
             conn.close()
             if rows:
                 reservations = [
-                    Reservation(row[0], row[1], row[2], row[3], row[4]) for row in rows
+                    Reservation(row[0], row[1], row[2], row[3], row[4], row[5])
+                    for row in rows
                 ]
                 return reservations
         except Exception:
@@ -76,7 +78,8 @@ class ReservationRepo:
             cur.execute(query)
             rows = cur.fetchall()
             reservations = [
-                Reservation(row[0], row[1], row[2], row[3], row[4]) for row in rows
+                Reservation(row[0], row[1], row[2], row[3], row[4], row[5])
+                for row in rows
             ]
         except Exception:
             raise ExRepo.RepositoryException(500)
@@ -88,7 +91,7 @@ class ReservationRepo:
         try:
             conn = sqlite3.connect("database/rest_pas_trop.db")
             cur = conn.cursor()
-            query = "UPDATE reservation SET start_date=?, end_date=?, price=?, username=?, WHERE id_reservation=?"
+            query = "UPDATE reservation SET start_date=?, end_date=?, price=?, username=?,id_apartment=? WHERE id_reservation=?"
             cur.execute(
                 query,
                 (
@@ -96,6 +99,7 @@ class ReservationRepo:
                     reservation.end_date,
                     reservation.price,
                     reservation.username,
+                    reservation.id_apartment,
                     reservation.id_reservation,
                 ),
             )

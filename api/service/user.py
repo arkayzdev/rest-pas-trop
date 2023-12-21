@@ -29,11 +29,11 @@ class UserService:
             user_json["reservation"] = self.reservation_service.get_by_username(
                 username
             )
-            return user_json
         except ExRepo.RepositoryException as e:
             raise ExServ.ServiceException(e.code)
         except Exception:
-            raise ExServ.ServiceException(500)
+            raise ExServ.ServiceException(502)
+        return user_json
 
     def get_all(self) -> list[dict]:
         try:
@@ -90,10 +90,10 @@ class UserService:
         return False
 
     def check_values(self, user: User) -> bool:
-        if len(user.username) > 60 | len(user.username) < 1:
+        if len(user.username) > 60 or len(user.username) < 1:
             return False
-        if len(user.first_name) > 30 | len(user.username) < 1:
+        if len(user.first_name) > 30 or len(user.username) < 1:
             return False
-        if len(user.last_name) > 30 | len(user.username) < 1:
+        if len(user.last_name) > 30 or len(user.username) < 1:
             return False
         return True
