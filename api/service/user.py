@@ -31,8 +31,8 @@ class UserService:
             )
         except ExRepo.RepositoryException as e:
             raise ExServ.ServiceException(e.code)
-        except Exception:
-            raise ExServ.ServiceException(502)
+        # except Exception:
+        #     raise ExServ.ServiceException(502)
         return user_json
 
     def get_all(self) -> list[dict]:

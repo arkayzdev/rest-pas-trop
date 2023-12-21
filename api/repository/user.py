@@ -47,7 +47,10 @@ class UserRepo:
             conn.close()
             user = User(row[0], row[1], row[2], row[3], row[4], row[5])
         except Exception:
-            raise ExRepo.RepositoryException(501)
+            raise ExRepo.RepositoryException(500)
+        if not user:
+            raise ExRepo.RepositoryException(204)
+        return user
 
     def view_all(self) -> list[User]:
         try:
