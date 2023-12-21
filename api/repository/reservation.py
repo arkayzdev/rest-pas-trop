@@ -6,7 +6,7 @@ class ReservationRepo:
     def create(self) -> None:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
-        query = "CREATE TABLE IF NOT EXISTS reservation (id_reservation INTEGER PRIMARY KEY AUTOINCREMENT, start_date TIMESTAMP, end_date TIMESTAMP, price INTEGER, username CHAR(60))"
+        query = "CREATE TABLE IF NOT EXISTS reservation (id_reservation INTEGER PRIMARY KEY AUTOINCREMENT, start_date TIMESTAMP, end_date TIMESTAMP, price INTEGER, username CHAR(60), id_apartment INTEGER)"
         cur.execute(query)
         conn.commit()
         conn.close()
@@ -15,12 +15,13 @@ class ReservationRepo:
     def insert(self, reservation: Reservation) -> None:
         conn = sqlite3.connect('database/rest_pas_trop.db')
         cur = conn.cursor()
-        query = "INSERT INTO reservation (start_date, end_date, price, username) VALUES (?,?,?,?)"
+        query = "INSERT INTO reservation (start_date, end_date, price, username, id_apartment) VALUES (?,?,?,?,?)"
         cur.execute(query, (
             reservation.start_date,
             reservation.end_date,
             reservation.price,
-            reservation.username
+            reservation.username,
+            reservation.id_apartment
         ))
         conn.commit()
         conn.close()

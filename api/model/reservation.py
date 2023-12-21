@@ -25,8 +25,7 @@ class Reservation:
 
     def json_fmt(self):
         return {
-            'reservation': {
-                'id_reservation': self.id_reservation,
-                'url': f'{os.getenv("hostname")}reservation/{self.id_reservation}'
-            }
+            'id_reservation': self.id_reservation,
+            'url': f'{os.getenv("hostname")}reservation/{self.id_reservation}'
+            
         }

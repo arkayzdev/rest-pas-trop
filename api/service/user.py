@@ -24,7 +24,7 @@ class UserService:
         users_json = [user.user_to_json() for user in users]
         for user_json in users_json:
             user_json['apartment'] = self.apartment_service.get_by_username(user_json['username'])
-            user_json['reservation'] = self.apartment_service.get_by_username(user_json['username'])
+            user_json['reservation'] = self.reservation_service.get_by_username(user_json['username'])
         return users_json
 
     def get_id(self, username: str):

@@ -13,27 +13,28 @@ auth = AuthentificationService()
 
 @apartment_blueprint.route('/', methods=['POST'])
 def create_apartment():
-    authorization_header = request.headers.get('Authorization')
-    if not authorization_header or not authorization_header.startswith('Basic '):
-        return jsonify({'message': 'Authorization header missing or invalid'}), 401
-    username, password = auth.extract_credentials(authorization_header)
+    # authorization_header = request.headers.get('Authorization')
+    # if not authorization_header or not authorization_header.startswith('Basic '):
+    #     return jsonify({'message': 'Authorization header missing or invalid'}), 401
+    # username, password = auth.extract_credentials(authorization_header)
 
-    if username == "" or password == "":
-        return jsonify({'message': 'Invalid credentials format'}), 401
+    # if username == "" or password == "":
+    #     return jsonify({'message': 'Invalid credentials format'}), 401
 
-    if not auth.authenticate_admin(username, password):
-        return jsonify({'message': 'Invalid username or password'}), 401
+    # if not auth.authenticate_admin(username, password):
+    #     return jsonify({'message': 'Invalid username or password'}), 401
     
     req_data = request.get_json()
     if all(key in req_data for key in ("username", "area", "max_people", "address", "availability")):
-        apartment = Apartment(None, req_data['username'], req_data['area'], req_data['max_people'], req_data['address'], req_data['availability'], None)
+        apartment = Apartment(None, req_data['area'], req_data['max_people'], req_data['address'], bool(req_data['availability']), req_data['username'])
     else:
         return jsonify({'message' : 'Arguments are not valid.', 'error': 'Bad Request'}), 400 
     
     if not service.check_values(apartment):
         return jsonify({'message': 'The type of fields entered is not respected'}), 400
-
-
+    
+    if not user_service.check_user(apartment.username):
+        return jsonify({'message': 'The username you entered does not exist'}), 400
 
     service.create(apartment)
     return jsonify({'message': 'Success creating new apartment !'}), 200
@@ -66,7 +67,7 @@ def get_apartment_username():
     else:
         return jsonify({'message': 'Missing required request argument'}), 400
 
-    if not service.get_by_username(username):
+    if not user_service.get_by_username(username):
         return jsonify({'message': 'The username you entered does not exist'}), 400
     else:
         return jsonify({'message': f'The desired user is: {username}'}), 200

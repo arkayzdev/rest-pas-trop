@@ -1,15 +1,18 @@
 from repository.reservation import ReservationRepo
 from model.reservation import Reservation
+from service.apartment import ApartmentService
 
 class ReservationService:
     def __init__(self) -> None:
         self.reservation_repo = ReservationRepo()
+        self.apartment_service = ApartmentService()
 
     def create(self, reservation: Reservation) -> None:
         self.reservation_repo.insert(reservation)    
 
     def get(self, id_reservation: int) -> Reservation:
-        return self.reservation_repo.view(id_reservation)
+        reservation = self.reservation_repo.view(id_reservation)
+        # reservation['apartment'] = 
     
     def get_all(self) -> list[Reservation]:
         return self.reservation_repo.view_all()
@@ -17,7 +20,7 @@ class ReservationService:
     def get_by_username(self, username: str) -> list[Reservation]:
         reservations = self.reservation_repo.view_by_username(username)
         if reservations:
-            return [reservation.reservation_to_json() for reservation in reservations]
+            return [reservation.json_fmt() for reservation in reservations]
         return None
 
     def update(self, reservation: Reservation):

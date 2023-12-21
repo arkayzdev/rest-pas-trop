@@ -9,16 +9,19 @@ class ApartmentService:
         self.apartment_repo.insert(apartment)    
 
     def get(self, id_apartment: int) -> Apartment:
-        return self.apartment_repo.view(id_apartment)
+        apartment = self.apartment_repo.view(id_apartment)
+        return apartment.apartment_to_json()
     
     def get_by_username(self, username: str) -> list[Apartment]:
         apartments = self.apartment_repo.view_by_username(username)
         if apartments:
-            return [apartment.apartment_to_json() for apartment in apartments]
+            return [apartment.json_fmt() for apartment in apartments]
         return None
+
     
     def get_all(self) -> list[Apartment]:
-        return self.apartment_repo.view_all()
+        apartments = self.apartment_repo.view_all()
+        return [apartment.apartment_to_json() for apartment in apartments]
 
     def update(self, apartment: Apartment):
         self.apartment_repo.update(apartment)
@@ -30,9 +33,7 @@ class ApartmentService:
         self.apartment_repo.delete_all()
 
     def check_values(self, apartment: Apartment) -> bool:
-        if not isinstance(apartment.area, int):
-            return False
-        if not isinstance(apartment.max_people, int):
+        if not apartment.area.isdigit() or not apartment.max_people.isdigit():
             return False
         return True
     
