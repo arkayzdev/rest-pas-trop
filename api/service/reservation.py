@@ -35,8 +35,11 @@ class ReservationService:
     def update(self, reservation: Reservation):
         self.reservation_repo.update(reservation)
 
-    def delete(self, reservation: Reservation) -> None:
-        self.reservation_repo.delete(reservation)
+    def delete(self, id_reservation) -> None:
+        self.reservation_repo.delete(id_reservation)
+
+    def delete_by_username(self, username: str):
+        self.reservation_repo.delete_by_username(username)
 
     def delete_all(self) -> None:
         self.reservation_repo.delete_all()

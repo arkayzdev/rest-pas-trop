@@ -80,7 +80,7 @@ def update_reservation(reservation_id: int):
 def delete_reservation(reservation_id: int):
     reservation = service.get(reservation_id)
     if reservation:
-        service.delete(reservation)
+        service.delete(reservation_id)
         return (
             jsonify({"message": f"Successfully deleted reservation: {reservation_id}"}),
             200,

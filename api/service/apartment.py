@@ -74,6 +74,15 @@ class ApartmentService:
         except Exception:
             raise ExServ.ServiceException(500)
 
+    def delete_by_username(self, username: str) -> None:
+        try:
+            self.apartment_repo.delete_by_username(username)
+        except ExRepo.RepositoryException as e:
+            raise ExServ.ServiceException(e.code)
+        except Exception:
+            raise ExServ.ServiceException(500)
+
+
     def delete_all(self) -> None:
         try:
             self.apartment_repo.delete_all()
