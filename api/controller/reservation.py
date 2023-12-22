@@ -38,10 +38,12 @@ def create_reservation():
             None,
         )
     except ExServ.ServiceException as e:
+        print(e)
         raise ExCon.ControllerException(e.code)
-    except Exception:
+    except Exception as e:
+        print(e)
         raise ExCon.ControllerException(400)
-
+   
     if not service.check_values(reservation):
         raise ExCon.ControllerException(400)
     if not user_service.check_user(reservation.username):
