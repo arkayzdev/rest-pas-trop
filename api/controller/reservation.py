@@ -38,7 +38,7 @@ def create_reservation():
             None,
             req_data["price"],
             req_data["username"],
-            req_data["id_apartment"]
+            req_data["id_apartment"],
         )
 
     except ExServ.ServiceException as e:
@@ -47,14 +47,17 @@ def create_reservation():
     except Exception as e:
         print(e)
         raise ExCon.ControllerException(400)
-    
+
     if not auth.authenticate_admin(admin_username, admin_password):
-        if not auth.authenticate_user(admin_username, admin_password) or admin_username != reservation.username:
+        if (
+            not auth.authenticate_user(admin_username, admin_password)
+            or admin_username != reservation.username
+        ):
             raise ExCon.ControllerException(401)
 
     if not service.check_values(reservation):
         raise ExCon.ControllerException(400)
-   
+
     if not apartment_service.get(reservation.id_apartment):
         raise ExCon.ControllerException(404)
 
@@ -66,7 +69,7 @@ def create_reservation():
 
     if not user_service.check_user(reservation.username):
         raise ExCon.ControllerException(404)
-    
+
     if not service.check_date(reservation):
         raise ValueError("Already a reservation at this date.")
 
@@ -95,8 +98,7 @@ def get_reservation(reservation_id: int):
         raise ExCon.ControllerException(e.code)
     except Exception as e:
         print(e)
-        raise ExCon.ControllerException(500)    
-         
+        raise ExCon.ControllerException(500)
 
 
 @reservation_blueprint.route("/<int:reservation_id>", methods=["PATCH"])
@@ -122,14 +124,17 @@ def update_reservation(reservation_id: int):
         raise ExCon.ControllerException(e.code)
     except Exception:
         raise ExCon.ControllerException(400)
-    
+
     if not auth.authenticate_admin(admin_username, admin_password):
-        if not auth.authenticate_user(admin_username, admin_password) or admin_username != reservation.username:
+        if (
+            not auth.authenticate_user(admin_username, admin_password)
+            or admin_username != reservation.username
+        ):
             raise ExCon.ControllerException(401)
 
     if not service.check_values(reservation):
         raise ExCon.ControllerException(400)
-    
+
     if not apartment_service.get(reservation.id_apartment):
         raise ExCon.ControllerException(404)
 
@@ -158,16 +163,19 @@ def delete_reservation(reservation_id: int):
         raise ExCon.ControllerException(e.code)
     except Exception:
         raise ExCon.ControllerException(400)
-    
+
     reservation_username = service.get_username(reservation_id)
 
     if not auth.authenticate_admin(admin_username, admin_password):
-        if not auth.authenticate_user(admin_username, admin_password) or admin_username != reservation_username:
+        if (
+            not auth.authenticate_user(admin_username, admin_password)
+            or admin_username != reservation_username
+        ):
             raise ExCon.ControllerException(401)
 
     if not service.check_values(reservation):
         raise ExCon.ControllerException(400)
-    
+
     if not apartment_service.get(reservation.id_apartment):
         raise ExCon.ControllerException(404)
 

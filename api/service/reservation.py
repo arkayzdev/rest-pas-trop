@@ -40,10 +40,8 @@ class ReservationService:
         try:
             reservations = self.reservation_repo.view_all()
         except ExRepo.RepositoryException as e:
-            print(e)
             raise ExServ.ServiceException(e.code)
         except Exception as e:
-            print(e)
             raise ExServ.ServiceException(500)
         try:
             reservations_json = []
