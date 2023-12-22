@@ -94,12 +94,9 @@ class ApartmentRepo:
                     )
                     for row in rows
                 ]
-                return apartments
         except Exception as e:
-            print(e)
             raise ExRepo.RepositoryException(500)
         if not rows:
-            # print("aaaaaaa")
             raise ExRepo.RepositoryException(204)
         return apartments
        
