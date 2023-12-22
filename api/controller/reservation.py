@@ -147,14 +147,14 @@ def update_reservation(reservation_id: int):
         raise ExCon.ControllerException(404)
         
 
-    # try:
-    service.update(reservation)
-    return (
-        jsonify({"message": f"Successfully updated reservation: {reservation_id}"}),
-        200,
-    )
-    # except Exception:
-    #     raise ExCon.ControllerException(500)
+    try:
+        service.update(reservation)
+        return (
+            jsonify({"message": f"Successfully updated reservation: {reservation_id}"}),
+            200,
+        )
+    except Exception:
+        raise ExCon.ControllerException(500)
 
 
 @reservation_blueprint.route("/<int:reservation_id>", methods=["DELETE"])

@@ -130,25 +130,25 @@ class ReservationRepo:
         return reservations
 
     def update(self, reservation: Reservation) -> None:
-        # try:
-        conn = sqlite3.connect("database/rest_pas_trop.db")
-        cur = conn.cursor()
-        query = "UPDATE reservation SET start_date=?, end_date=?, price=?, username=?, id_apartment=? WHERE id_reservation=?"
-        cur.execute(
-            query,
-            (
-                reservation.start_date,
-                reservation.end_date,
-                reservation.price,
-                reservation.username,
-                reservation.id_apartment,
-                reservation.id_reservation,
-            ),
-        )
-        conn.commit()
-        conn.close()
-        # except Exception:
-        #     raise ExRepo.RepositoryException(500)
+        try:
+            conn = sqlite3.connect("database/rest_pas_trop.db")
+            cur = conn.cursor()
+            query = "UPDATE reservation SET start_date=?, end_date=?, price=?, username=?, id_apartment=? WHERE id_reservation=?"
+            cur.execute(
+                query,
+                (
+                    reservation.start_date,
+                    reservation.end_date,
+                    reservation.price,
+                    reservation.username,
+                    reservation.id_apartment,
+                    reservation.id_reservation,
+                ),
+            )
+            conn.commit()
+            conn.close()
+        except Exception:
+            raise ExRepo.RepositoryException(500)
 
     def delete(self, id_reservation: int) -> None:
         try:

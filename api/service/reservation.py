@@ -83,12 +83,12 @@ class ReservationService:
         return None
 
     def update(self, reservation: Reservation):
-        # try:
-        self.reservation_repo.update(reservation)
-        # except ExRepo.RepositoryException as e:
-        #     raise ExServ.ServiceException(e.code)
-        # except Exception:
-        #     raise ExServ.ServiceException(500)
+        try:
+            self.reservation_repo.update(reservation)
+        except ExRepo.RepositoryException as e:
+            raise ExServ.ServiceException(e.code)
+        except Exception:
+            raise ExServ.ServiceException(500)
 
     
 
