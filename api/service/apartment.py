@@ -22,19 +22,17 @@ class ApartmentService:
     def get(self, id_apartment: int) -> Apartment:
         try:
             apartment = self.apartment_repo.view(id_apartment)
-            print(apartment.id_apartment)
             if not apartment:
                 return None
             apartment_json = apartment.apartment_to_json()
-            apartment_json['reservation'] = self.reservation_repo.view_by_apartment(apartment.id_apartment)
+            apartment_json['reservation'] = self.reservation_repo.view_by_apartment(id_apartment)
             apartment_json['user'] = self.user_repo.view(apartment.username).json_fmt()
         except ExRepo.RepositoryException as e:
             raise ExServ.ServiceException(e.code)
         except Exception:
             raise ExServ.ServiceException(500)
-        if apartment:
-            return apartment.apartment_to_json()
-        return None
+        return apartment_json
+    
 
     
     def get_by_username(self, username: str) -> list[Apartment]:

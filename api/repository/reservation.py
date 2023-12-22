@@ -82,7 +82,7 @@ class ReservationRepo:
                     Reservation(row[0], row[1], row[2], row[3], row[4], row[5]) for row in rows
                 ]
                 return [reservation.json_fmt() for reservation in reservations]
-            return []
+            return None
         except Exception as e:
             print(e)
             raise ExRepo.RepositoryException(500)
