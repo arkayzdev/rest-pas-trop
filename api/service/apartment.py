@@ -63,8 +63,10 @@ class ApartmentService:
         try:
             apartments = self.apartment_repo.view_all()
         except ExRepo.RepositoryException as e:
+            print(e)
             raise ExServ.ServiceException(e.code)
-        except Exception:
+        except Exception as e:
+            print(e)
             raise ExServ.ServiceException(500)
         apartments_json = []
         for apartment in apartments:
@@ -72,6 +74,7 @@ class ApartmentService:
             apartment_json['reservation'] = self.reservation_repo.view_by_apartment(apartment.id_apartment)
             apartment_json['user'] = self.user_repo.view(apartment.username).json_fmt()
             apartments_json.append(apartment_json)
+       
         return apartments_json
 
     def update(self, apartment: Apartment):

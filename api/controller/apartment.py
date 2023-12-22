@@ -49,13 +49,10 @@ def create_apartment():
         raise ExCon.ControllerException(400)
 
     if not service.check_values(apartment):
+        print("c")
         raise ExCon.ControllerException(400)
  
     if not user_service.check_user(apartment.username):
-        raise ExCon.ControllerException(400)
-  
-  
-    if not service.check_date(apartment):
         raise ExCon.ControllerException(400)
   
     try:
@@ -69,14 +66,14 @@ def create_apartment():
 @apartment_blueprint.route("/", methods=["GET"])
 def get_apartments():
     try:
-        return jsonify(service.get_all())
+        jsonify(service.get_all())
     except ExServ.ServiceException as e:
         print(e)
         raise ExCon.ControllerException(e.code)
     except Exception as e:
         print(e)
         raise ExCon.ControllerException(500)
-    
+    return jsonify(service.get_all())
 
 
 @apartment_blueprint.route("/<int:apartment_id>", methods=["GET"])

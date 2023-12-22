@@ -86,17 +86,24 @@ class ApartmentRepo:
             query = "SELECT * from apartment"
             cur.execute(query)
             rows = cur.fetchall()
-            apartments = [
-                Apartment(
-                    row[0], row[1], row[2], row[3], True if row[4] == 1 else False, row[5]
-                )
-                for row in rows
-            ]
-        except Exception:
+            apartments = []
+            if rows:
+                apartments = [
+                    Apartment(
+                        row[0], row[1], row[2], row[3], True if row[4] == 1 else False, row[5]
+                    )
+                    for row in rows
+                ]
+                return apartments
+        except Exception as e:
+            print(e)
             raise ExRepo.RepositoryException(500)
-        if not apartments:
+        if not rows:
+            # print("aaaaaaa")
             raise ExRepo.RepositoryException(204)
         return apartments
+       
+        
 
     def update(self, apartment: Apartment) -> None:
         try:

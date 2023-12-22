@@ -54,7 +54,7 @@ def create_reservation():
 
     if not service.check_values(reservation):
         raise ExCon.ControllerException(400)
-    
+   
     if not apartment_service.get(reservation.id_apartment):
         raise ExCon.ControllerException(404)
 
@@ -66,6 +66,9 @@ def create_reservation():
 
     if not user_service.check_user(reservation.username):
         raise ExCon.ControllerException(404)
+    
+    if not service.check_date(reservation):
+        raise ValueError("Already a reservation at this date.")
 
     service.create(reservation)
     return jsonify({"message": "Success creating new reservation!"}), 200

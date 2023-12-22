@@ -118,12 +118,14 @@ class ReservationRepo:
             query = "SELECT * from reservation"
             cur.execute(query)
             rows = cur.fetchall()
-            reservations = [
-                Reservation(row[0], row[1], row[2], row[3], row[4], row[5]) for row in rows
-            ]
-        except Exception:
+            if rows:
+                reservations = [
+                    Reservation(row[0], row[1], row[2], row[3], row[4], row[5]) for row in rows
+                ]
+        except Exception as e:
+            print(e)
             raise ExRepo.RepositoryException(500)
-        if not reservations:
+        if not rows:
             raise ExRepo.RepositoryException(204)
         return reservations
 
