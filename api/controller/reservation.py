@@ -118,7 +118,7 @@ def update_reservation(reservation_id: int):
             for key in ("start_date", "end_date", "price", "username", "id_apartment")
         )
         reservation = Reservation(
-            None,
+            reservation_id,
             req_data["start_date"],
             req_data["end_date"],
             req_data["price"],
@@ -139,18 +139,22 @@ def update_reservation(reservation_id: int):
 
     if not service.check_values(reservation):
         raise ExCon.ControllerException(400)
+    
+    if not service.get(reservation.id_reservation):
+        raise ExCon.ControllerException(404)
 
     if not apartment_service.get(reservation.id_apartment):
         raise ExCon.ControllerException(404)
+        
 
-    try:
-        service.update(reservation)
-        return (
-            jsonify({"message": f"Successfully updated reservation: {reservation_id}"}),
-            200,
-        )
-    except Exception:
-        raise ExCon.ControllerException(500)
+    # try:
+    service.update(reservation)
+    return (
+        jsonify({"message": f"Successfully updated reservation: {reservation_id}"}),
+        200,
+    )
+    # except Exception:
+    #     raise ExCon.ControllerException(500)
 
 
 @reservation_blueprint.route("/<int:reservation_id>", methods=["DELETE"])
