@@ -20,11 +20,11 @@ auth = AuthentificationService()
 def create_reservation():
     authorization_header = request.headers.get("Authorization")
     if not authorization_header or not authorization_header.startswith("Basic "):
-        return jsonify({"message": "Authorization header missing or invalid"}), 401
+        raise ExCon.ControllerException(401)
     admin_username, admin_password = auth.extract_credentials(authorization_header)
 
     if admin_username == "" or admin_password == "":
-        return jsonify({"message": "Invalid credentials format"}), 401
+        raise ExCon.ControllerException(401)
 
     try:
         req_data = request.get_json()
@@ -103,22 +103,27 @@ def get_reservation(reservation_id: int):
 
 @reservation_blueprint.route("/<int:reservation_id>", methods=["PATCH"])
 def update_reservation(reservation_id: int):
-    authorization_header = request.headers.get("Authorization")
-    if not authorization_header or not authorization_header.startswith("Basic "):
-        return jsonify({"message": "Authorization header missing or invalid"}), 401
+    authorization_header = request.headers.get('Authorization')
+    if not authorization_header or not authorization_header.startswith('Basic '):
+        raise ExCon.ControllerException(401)
     admin_username, admin_password = auth.extract_credentials(authorization_header)
 
     if admin_username == "" or admin_password == "":
-        return jsonify({"message": "Invalid credentials format"}), 401
+        raise ExCon.ControllerException(401)
+    
     try:
         req_data = request.get_json()
+        all(
+            key in req_data
+            for key in ("start_date", "end_date", "price", "username", "id_apartment")
+        )
         reservation = Reservation(
             None,
-            req_data["apartment_id"],
-            req_data["user_id"],
             req_data["start_date"],
             req_data["end_date"],
-            None,
+            req_data["price"],
+            req_data["username"],
+            req_data["id_apartment"],
         )
     except ExServ.ServiceException as e:
         raise ExCon.ControllerException(e.code)
@@ -157,6 +162,7 @@ def delete_reservation(reservation_id: int):
 
     if admin_username == "" or admin_password == "":
         return jsonify({"message": "Invalid credentials format"}), 401
+    
     try:
         reservation = service.get(reservation_id)
     except ExServ.ServiceException as e:
@@ -173,12 +179,6 @@ def delete_reservation(reservation_id: int):
         ):
             raise ExCon.ControllerException(401)
 
-    if not service.check_values(reservation):
-        raise ExCon.ControllerException(400)
-
-    if not apartment_service.get(reservation.id_apartment):
-        raise ExCon.ControllerException(404)
-
     if reservation:
         service.delete(reservation_id)
         return (
@@ -191,6 +191,15 @@ def delete_reservation(reservation_id: int):
 
 @reservation_blueprint.route("/", methods=["DELETE"])
 def delete_reservations():
+    authorization_header = request.headers.get('Authorization')
+    if not authorization_header or not authorization_header.startswith('Basic '):
+        raise ExCon.ControllerException(401)
+    admin_username, admin_password = auth.extract_credentials(authorization_header)
+    if admin_username == "" or admin_password == "":
+        raise ExCon.ControllerException(401)
+    if not auth.authenticate_admin(admin_username, admin_password):
+        raise ExCon.ControllerException(401)
+    
     try:
         service.delete_all()
     except ExServ.ServiceException as e:

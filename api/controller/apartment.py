@@ -69,8 +69,8 @@ def get_apartments():
         jsonify(service.get_all())
     except ExServ.ServiceException as e:
         raise ExCon.ControllerException(e.code)
-    # except Exception as e:
-    #     raise ExCon.ControllerException(500)
+    except Exception as e:
+        raise ExCon.ControllerException(500)
     return jsonify(service.get_all())
 
 
@@ -119,7 +119,7 @@ def update_apartment(apartment_id: int):
     if not service.get(apartment_id):
         raise ExCon.ControllerException(404)    
     
-    if user_service.check_user(apartment.username):
+    if not user_service.check_user(apartment.username):
         raise ExCon.ControllerException(400)    
 
     service.update(apartment)
@@ -135,7 +135,6 @@ def delete_apartment(apartment_id: int):
 
     if admin_username == "" or admin_password == "":
         raise ExCon.ControllerException(401)
-
     if not auth.authenticate_admin(admin_username, admin_password):
         raise ExCon.ControllerException(401)
     if not service.get(apartment_id):
@@ -151,14 +150,11 @@ def delete_apartments():
     if not authorization_header or not authorization_header.startswith('Basic '):
         raise ExCon.ControllerException(401)
     admin_username, admin_password = auth.extract_credentials(authorization_header)
-    print('a')
     if admin_username == "" or admin_password == "":
         raise ExCon.ControllerException(401)
-    print('b')
     if not auth.authenticate_admin(admin_username, admin_password):
         raise ExCon.ControllerException(401)
     try:
-        print('c')
         service.delete_all()
     except ExServ.ServiceException as e:
         raise ExCon.ControllerException(e.code)

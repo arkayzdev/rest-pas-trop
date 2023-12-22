@@ -43,14 +43,13 @@ class ReservationRepo:
             query = "SELECT * from reservation WHERE id_reservation=?"
             cur.execute(query, (id_reservation,))
             row = cur.fetchone()
-
-            reservation = Reservation(row[0], row[1], row[2], row[3], row[4], row[5])
         except Exception:
             raise ExRepo.RepositoryException(500)
-        else:
-            if not reservation:
-                raise ExRepo.RepositoryException(404)
-            return reservation
+        if row:
+            reservation = Reservation(row[0], row[1], row[2], row[3], row[4], row[5])
+        if not row:
+            raise ExRepo.RepositoryException(404)
+        return reservation
 
     def view_by_username(self, username: str) -> list[Reservation]:
         try:

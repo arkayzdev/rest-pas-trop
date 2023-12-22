@@ -90,9 +90,9 @@ class ReservationService:
         except Exception:
             raise ExServ.ServiceException(500)
 
-    def delete(self, reservation: Reservation) -> None:
+    def delete(self, id_reservation: Reservation) -> None:
         try:
-            self.reservation_repo.delete(reservation)
+            self.reservation_repo.delete(id_reservation)
         except ExRepo.RepositoryException as e:
             raise ExServ.ServiceException(e.code)
         except Exception:
@@ -133,7 +133,6 @@ class ReservationService:
                 raise ValueError("Already a reservation at this date.")
 
         except ValueError as e:
-            print(e)
             return False
 
     def check_values(self, reservation: Reservation) -> bool:
@@ -143,7 +142,6 @@ class ReservationService:
             else:
                 raise ValueError("The string contains more than just numbers.")
         except ValueError as e:
-            print(e)
             return False
         
     def get_username(self, id_reservation: int):
