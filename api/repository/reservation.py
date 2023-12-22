@@ -81,13 +81,35 @@ class ReservationRepo:
                 reservations = [
                     Reservation(row[0], row[1], row[2], row[3], row[4], row[5]) for row in rows
                 ]
-                print(reservations[0].reservation_to_json())
                 return [reservation.json_fmt() for reservation in reservations]
             return []
         except Exception as e:
             print(e)
+            raise ExRepo.RepositoryException(500)
+            
         
-        
+
+    def view_by_date(self, reservation: Reservation):
+        try:
+            conn = sqlite3.connect("database/rest_pas_trop.db")
+            cur = conn.cursor()
+            query = "SELECT * from reservation WHERE (start_date <= ?) AND (end_date >= ?) AND (id_apartment = ?) AND (username != ?)"
+            cur.execute(query, (
+                reservation.end_date,
+                reservation.start_date,
+                reservation.id_apartment,
+                reservation.username
+            ))
+            row = cur.fetchone()
+            conn.close()
+            if row:
+                reservation = Reservation(row[0], row[1], row[2], row[3], row[4], row[5])
+                return reservation
+            return None
+        except Exception as e:
+            print(e)
+            raise ExRepo.RepositoryException(500)
+           
 
     def view_all(self) -> list[Reservation]:
         try:
@@ -131,7 +153,7 @@ class ReservationRepo:
             conn = sqlite3.connect("database/rest_pas_trop.db")
             cur = conn.cursor()
             query = "DELETE FROM reservation WHERE id_reservation=?"
-            cur.execute(query, (id,))
+            cur.execute(query, (id_reservation,))
             conn.commit()
             conn.close()
         except Exception:
@@ -158,3 +180,21 @@ class ReservationRepo:
             conn.close()
         except Exception:
             raise ExRepo.RepositoryException(500)
+        
+    def get_username(self, id_reservation) :
+        try:
+            conn = sqlite3.connect("database/rest_pas_trop.db")
+            cur = conn.cursor()
+            query = "SELECT * from reservation WHERE id_reservation=?"
+            cur.execute(query, (id_reservation,))
+            row = cur.fetchone()
+            if row:
+                return row[4]
+        except Exception:
+            raise ExRepo.RepositoryException(500)
+        else:
+            if not row:
+                raise ExRepo.RepositoryException(404)
+            return None
+
+    

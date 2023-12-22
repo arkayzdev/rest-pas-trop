@@ -54,6 +54,10 @@ def create_apartment():
     if not user_service.check_user(apartment.username):
         raise ExCon.ControllerException(400)
   
+  
+    if not service.check_date(apartment):
+        raise ExCon.ControllerException(400)
+  
     try:
         service.create(apartment)
     except Exception:
@@ -99,8 +103,8 @@ def update_apartment(apartment_id: int):
     if admin_username == "" or admin_password == "":
         raise ExCon.ControllerException(401)
 
-    if not auth.authenticate_admin(admin_username, admin_password):
-        raise ExCon.ControllerException(401)
+   
+    
     try:
         req_data = request.get_json()
         all(key in req_data for key in ("username", "area", "max_people", "address", "availability"))
@@ -110,6 +114,11 @@ def update_apartment(apartment_id: int):
     except Exception:
         raise ExCon.ControllerException(400)
  
+    if not auth.authenticate_admin(admin_username, admin_password):
+        if not auth.authenticate_user(admin_username, admin_password) or admin_username != apartment.username:
+            raise ExCon.ControllerException(401)
+
+
     if not service.check_values(apartment):
         raise ExCon.ControllerException(400)    
     if not service.get(apartment_id):

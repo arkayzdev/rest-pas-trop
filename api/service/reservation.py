@@ -4,6 +4,7 @@ from service.apartment import ApartmentService
 from repository.user import UserRepo
 import exception.repository as ExRepo
 import exception.service as ExServ
+from datetime import datetime
 
 
 class ReservationService:
@@ -34,31 +35,29 @@ class ReservationService:
             return reservation_json
         return None
      
-    def get_for_apartment(id_apartment):
-        try:
-            reservation = self.reservation_repo.view_by_apartment(id_apartment)
-        except ExRepo.RepositoryException as e:
-            raise ExServ.ServiceException(e.code)
-        except Exception:
-            raise ExServ.ServiceException(500)
-        if apartment:
-            return apartment.json_fmt()
-        return None
 
     def get_all(self) -> list[Reservation]:
         try:
             reservations = self.reservation_repo.view_all()
         except ExRepo.RepositoryException as e:
+            print(e)
             raise ExServ.ServiceException(e.code)
-        except Exception:
+        except Exception as e:
+            print(e)
             raise ExServ.ServiceException(500)
-        reservations_json = []
-        for reservation in reservations:
-            reservation_json = reservation.reservation_to_json()
-            reservation_json['apartment'] = self.apartment_service.get_for_reservation(reservation.id_apartment)
-            reservation_json['user'] = self.user_repo.view(reservation.username).json_fmt()
-            reservations_json.append(reservation_json)
-        return reservations_json
+        try:
+            reservations_json = []
+            for reservation in reservations:
+                reservation_json = reservation.reservation_to_json()
+                try :
+                    reservation_json['apartment'] = self.apartment_service.get_for_reservation(reservation.id_apartment)
+                except Exception as e:
+                    print(e)
+                reservation_json['user'] = self.user_repo.view(reservation.username).json_fmt()
+                reservations_json.append(reservation_json)
+            return reservations_json
+        except Exception as e:
+            print(e)
 
 
 
@@ -110,8 +109,6 @@ class ReservationService:
             raise ExServ.ServiceException(500)
 
 
-
-
     def delete_all(self) -> None:
         try:
             self.reservation_repo.delete_all()
@@ -120,11 +117,39 @@ class ReservationService:
         except Exception:
             raise ExServ.ServiceException(500)
 
+
+    def string_to_date(self, date: str) -> datetime:
+        try:
+            date_obj = datetime.strptime(date, '%d-%m-%Y')
+            return date_obj
+        except ValueError:
+            print(f"The string '{date}' is not a valid date.")
+            raise ExServ.ServiceException(400)
+
+
+    def check_date(self, reservation: Reservation):
+        try:
+            if not self.reservation_repo.view_by_date(reservation):
+                return True
+            else:
+                raise ValueError("Already a reservation at this date.")
+
+        except ValueError as e:
+            print(e)
+            return False
+
     def check_values(self, reservation: Reservation) -> bool:
-        if not isinstance(reservation.start_date, str):
+        try:
+            if reservation.price.isdigit():
+                return True
+            else:
+                raise ValueError("The string contains more than just numbers.")
+        except ValueError as e:
+            print(e)
             return False
-        if not isinstance(reservation.end_date, str):
-            return False
-        if not isinstance(reservation.price, int):
-            return False
-        return True
+        
+    def get_username(self, id_reservation: int):
+        try :
+            return self.reservation_repo.get_username(id_reservation)
+        except Exception:
+            return None

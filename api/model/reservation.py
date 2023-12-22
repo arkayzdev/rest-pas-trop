@@ -18,8 +18,7 @@ class Reservation:
             'id_reservation': self.id_reservation,
             'start_date': self.start_date,
             'end_date': self.end_date,
-            'price': self.price,
-            'username': self.username
+            'price': self.price
         }
     
 
